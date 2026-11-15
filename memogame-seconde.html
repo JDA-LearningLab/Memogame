@@ -293,7 +293,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
       <button class="btn" id="startBtn">🚀 Entrer dans le labo</button>
       <div class="row">
         <button class="btn sec small" id="resumeBtn" style="display:none">↩️ Reprendre la partie</button>
-        <button class="btn sec small" id="animBtn">🔐 Espace animateur</button>
+        <button class="btn sec small" id="animBtn">🔐 Espace professeur</button>
       </div>
     </div>
     <div class="msg ko" id="homeMsg"></div>
@@ -362,11 +362,11 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
 <section class="screen" id="s-anim">
   <div class="card">
     <div class="row" style="justify-content:space-between">
-      <h2 style="margin:0">🔐 Espace animateur</h2>
+      <h2 style="margin:0">🔐 Espace professeur</h2>
       <button class="btn sec small" id="animBack">← Accueil</button>
     </div>
     <div id="animLock" style="margin-top:14px">
-      <p>Code animateur :</p>
+      <p>Code professeur :</p>
       <div class="row"><input id="animCode" type="password" placeholder="code"><button class="btn small" id="animGo">Entrer</button></div>
       <div class="msg ko" id="animMsg"></div>
     </div>
@@ -392,7 +392,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <div class="timeline">
           <div class="tl"><b class="fred">0 – 5 min</b><div>Équipes, rôles, fiches. Règle d’or : après chaque mission, on complète la case de la fiche avec les mots surlignés.</div></div>
           <div class="tl"><b class="fred">5 – 50 min</b><div><b>6 missions</b> d’environ 7 à 8 min : ① vrai ou faux (neuromythes) · ② puzzle de la courbe de l’oubli + planning de Neuronus · ③ mot mystère · ④ test du gorille · ⑤ défi indonésien + la copie rendue · ⑥ la phrase floue + filtre rouge.</div></div>
-          <div class="tl"><b class="fred">50 – 55 min</b><div><b>Coffre coopératif</b> : chaque équipe inscrit sa lettre au tableau. Si une équipe n’a pas fini, l’animateur donne sa lettre.</div></div>
+          <div class="tl"><b class="fred">50 – 55 min</b><div><b>Coffre coopératif</b> : chaque équipe inscrit sa lettre au tableau. Si une équipe n’a pas fini, le professeur donne sa lettre.</div></div>
           <div class="tl"><b class="fred">Séance suivante</b><div><b>Débriefing</b> (30 à 45 min) avec le diaporama : correction de la fiche, puis chaque élève écrit <b>son défi</b> de la semaine. Idéal : le faire <b>2 ou 3 jours après</b> le jeu, ce qui en fait une réactivation espacée.</div></div>
         </div>
         <p class="muted">Variante 1 h 50 : jeu (55 min), pause, débriefing (45 min) et construction par chaque élève de son planning de réactivation pour le prochain chapitre.</p>
@@ -405,13 +405,13 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <div class="timeline" id="deckPlan"></div>
       </div>
       <div class="tab" id="t5">
-        <p>Ouvrez directement n’importe quelle mission pour la tester, sans refaire les précédentes. Les missions restent ensuite toutes ouvertes (mode animateur).</p>
+        <p>Ouvrez directement n’importe quelle mission pour la tester, sans refaire les précédentes. Les missions restent ensuite toutes ouvertes (mode professeur).</p>
         <div class="mlist" id="testList" style="max-width:560px"></div>
         <p class="muted" style="margin-top:10px">Ce mode remplace la partie enregistrée sur cet appareil : ne l’utilisez pas sur une tablette d’équipe en cours de jeu.</p>
       </div>
       <div class="tab" id="t4">
-        <p><b>Mode animateur</b> : ouvre le jeu avec <b>les 6 missions et le code final débloqués</b>, à jouer dans n’importe quel ordre et autant de fois que vous voulez (pour préparer la séance, ou projeter une mission au débriefing). Cela remplace la partie enregistrée sur cet appareil.</p>
-        <button class="btn" id="animMode">🧪 Ouvrir toutes les missions (mode animateur)</button>
+        <p><b>Mode professeur</b> : ouvre le jeu avec <b>les 6 missions et le code final débloqués</b>, à jouer dans n’importe quel ordre et autant de fois que vous voulez (pour préparer la séance, ou projeter une mission au débriefing). Cela remplace la partie enregistrée sur cet appareil.</p>
+        <button class="btn" id="animMode">🧪 Ouvrir toutes les missions (mode professeur)</button>
         <hr style="margin:18px 0;border:0;border-top:2px dashed #e2dcf5">
         <p><b>Réinitialiser cet appareil</b> : efface la partie enregistrée sur cette tablette.</p>
         <button class="btn sec" id="resetBtn">🧹 Réinitialiser la partie sur cet appareil</button>
@@ -479,7 +479,7 @@ $("#startBtn").onclick=()=>{
 };
 $("#resumeBtn").onclick=()=>{S=load();if(S)enterGame();};
 function enterGame(){
-  $("#teamBadge").innerHTML=S.anim?'🧪 Mode animateur · toutes les missions ouvertes':'<span class="dot" style="background:'+GROUP_COLORS[S.g-1]+'"></span>Équipe '+GROUP_NAMES[S.g-1]+(S.team?" · "+escapeHtml(S.team):"");
+  $("#teamBadge").innerHTML=S.anim?'🧪 Mode professeur · toutes les missions ouvertes':'<span class="dot" style="background:'+GROUP_COLORS[S.g-1]+'"></span>Équipe '+GROUP_NAMES[S.g-1]+(S.team?" · "+escapeHtml(S.team):"");
   updateKeys();
   if(S.end){showWin();return;}
   renderHub();show("s-hub");
@@ -1094,7 +1094,7 @@ function renderStep(){
   $("#hintBox").classList.remove("on");$("#hintBox").innerHTML="";
   step.render(box,()=>{
     S.step++;
-    if(S.anim&&S.step>=M.steps.length){S.ad=S.ad||{};S.ad[curM]=true;S.step=0;save();updateKeys();openModal('<div class="bigkey">🧪</div><h2 style="margin:6px 0">Mission 0'+(curM+1)+' testée</h2><p>Mode animateur : toutes les missions restent ouvertes, vous pouvez les rejouer dans n’importe quel ordre.</p><button class="btn" id="mClose">🔬 Retour aux missions</button>');$("#mClose").onclick=()=>{closeModal();renderHub();show("s-hub");};return;}
+    if(S.anim&&S.step>=M.steps.length){S.ad=S.ad||{};S.ad[curM]=true;S.step=0;save();updateKeys();openModal('<div class="bigkey">🧪</div><h2 style="margin:6px 0">Mission 0'+(curM+1)+' testée</h2><p>Mode professeur : toutes les missions restent ouvertes, vous pouvez les rejouer dans n’importe quel ordre.</p><button class="btn" id="mClose">🔬 Retour aux missions</button>');$("#mClose").onclick=()=>{closeModal();renderHub();show("s-hub");};return;}
     if(S.step>=M.steps.length){S.m++;S.step=0;save();updateKeys();
       const next=S.m<MISSIONS.length?"Mission 0"+(S.m+1)+" déverrouillée !":"Le code final est déverrouillé !";
       openModal('<div class="bigkey">🔓</div><h2 style="margin:6px 0">Mission 0'+(curM+1)+' validée !</h2><p style="font-size:18px">'+next+'</p><p class="fiche" style="text-align:left">📝 Avant de continuer, vérifiez que la case « Mission '+(curM+1)+' » de votre fiche bilan est complétée.</p><button class="btn" id="mClose">🔬 Retour aux missions</button>');
@@ -1127,7 +1127,7 @@ function showWin(){
   show("s-win");
 }
 
-/* ---------- animateur ---------- */
+/* ---------- professeur ---------- */
 $("#animBtn").onclick=()=>show("s-anim");
 $("#animBack").onclick=()=>{renderHome();show("s-home");};
 function animEnter(){if($("#animCode").value.trim().toUpperCase()===ANIM_CODE){$("#animLock").style.display="none";$("#animIn").style.display="block";}else{const m=$("#animMsg");m.textContent="Code incorrect.";m.classList.add("on");}}
@@ -1152,7 +1152,7 @@ $("#t2").innerHTML=`
 <h4>👓 Mission 06 · Engagement actif</h4>
 <ul><li>Passif : relire, surligner, recopier, vidéo · Actif : cartes, expliquer à un camarade, refaire sans correction, schéma bilan de mémoire.</li><li>Filtre rouge (même carte que les parents) : <b>RELIRE · TESTER · QUESTIONS</b> (LIRE accepté).</li><li>30 minutes : la <b>feuille blanche</b>.</li></ul>
 <h4>🔐 Code final</h4><ul><li>4 équipes : <b>TEST</b> · 5 : <b>OUBLI</b> · 6 : <b>RAPPEL</b> · 7 : <b>NEURONE</b>. Équipe 1 ROUGE = 1re lettre, 2 BLEUE, 3 VERTE, 4 JAUNE, 5 VIOLETTE, 6 ORANGE, 7 ROSE.</li></ul>
-<h4>🔑 Code animateur : PILIERS</h4>`;
+<h4>🔑 Code professeur : PILIERS</h4>`;
 
 /* ---------------- diaporama de débriefing ---------------- */
 const SLIDES=[
