@@ -902,7 +902,7 @@ function motifGame(box,d,ok){
 const INDO=[["kucing","chat"],["anjing","chien"],["rumah","maison"],["air","eau"],["makan","manger"],["minum","boire"],["buku","livre"],["sekolah","école"],["guru","professeur"],["murid","élève"],["matahari","soleil"],["bulan","lune"],["pohon","arbre"],["ikan","poisson"],["tidur","dormir"]];
 function indoGame(box,d,ok){
   const STUDY=150;
-  box.appendChild(el("div",{class:"q"},"15 mots indonésiens à retenir avec leur traduction. Vous avez <b>2 min 30</b>. Ensuite, le labo vous en redemandera 5… avec des indices si vous vous trompez."));
+  box.appendChild(el("div",{class:"q"},"15 mots indonésiens à retenir avec leur traduction. Vous avez <b>2 min 30</b>. Ensuite, le labo vous en redemandera 3… avec des indices si vous vous trompez."));
   box.appendChild(el("div",{class:"fiche",style:"background:#eef2ff;border-color:#5b3fd6;color:#2a3d8f"},"💡 Stratégie conseillée : répartissez-vous les mots (2 ou 3 chacun), inventez une image ou un lien pour chacun (<i>tidur</i> → « ti dort » → dormir), puis interrogez-vous les uns les autres avant la fin du temps."));
   const grid=el("div",{class:"cards",style:"grid-template-columns:repeat(auto-fill,minmax(150px,1fr));margin-top:10px"});
   INDO.forEach(w=>grid.appendChild(el("div",{class:"ncard",style:"padding:12px;text-align:center"},'<div class="fred" style="font-size:22px;color:#3d8bff">'+w[0]+'</div><div style="font-weight:800">'+w[1]+'</div>')));
@@ -912,7 +912,7 @@ function indoGame(box,d,ok){
   bar.append(tm,go);box.appendChild(bar);
   let left=STUDY;tm.textContent="⏱️ 2:30";
   const iv=setInterval(()=>{left--;tm.textContent="⏱️ "+Math.floor(left/60)+":"+String(left%60).padStart(2,"0");if(left<=0)start();},1000);
-  const pick=shuffle(INDO).slice(0,5);
+  const pick=shuffle(INDO).slice(0,3);
   const zone=el("div");box.appendChild(zone);
   let started=false;
   function start(){if(started)return;started=true;clearInterval(iv);grid.remove();bar.remove();round(1,[]);}
@@ -925,7 +925,7 @@ function indoGame(box,d,ok){
     function ask(){
       if(k>=order.length){done();return;}
       const w=order[k];let shown=r===1?1:0;let errors=0;
-      card.innerHTML='<div class="muted" style="font-weight:800">Mot '+(k+1)+' / 5</div><div class="fred" style="font-size:26px;margin:4px 0">« '+w[1]+' »</div><div class="fred" id="iMask" style="font-size:24px;letter-spacing:2px;color:#3d8bff">'+mask(w[0],shown)+'</div><div class="muted" id="iLen">('+w[0].length+' lettres)</div>';
+      card.innerHTML='<div class="muted" style="font-weight:800">Mot '+(k+1)+' / 3</div><div class="fred" style="font-size:26px;margin:4px 0">« '+w[1]+' »</div><div class="fred" id="iMask" style="font-size:24px;letter-spacing:2px;color:#3d8bff">'+mask(w[0],shown)+'</div><div class="muted" id="iLen">('+w[0].length+' lettres)</div>';
       const row=el("div",{class:"row",style:"margin-top:8px"});const inp=el("input",{autocomplete:"off",style:"width:200px"});const b=el("button",{class:"btn"},"Valider");row.append(inp,b);card.appendChild(row);
       const m=el("div");card.appendChild(m);inp.focus();
       const check=()=>{
@@ -939,10 +939,10 @@ function indoGame(box,d,ok){
     }
     function done(){
       const sc=firstTry.filter(Boolean).length;
-      if(r===1){card.innerHTML='<div class="fred" style="font-size:22px">Essai n°1 : '+sc+' / 5 du premier coup.</div><p>Les erreurs et les lettres données en retour vous ont guidés. Voyons maintenant ce qu’il en reste…</p>';
+      if(r===1){card.innerHTML='<div class="fred" style="font-size:22px">Essai n°1 : '+sc+' / 3 du premier coup.</div><p>Les erreurs et les lettres données en retour vous ont guidés. Voyons maintenant ce qu’il en reste…</p>';
         const nx=el("button",{class:"btn"},"➡️ Essai n°2");nx.onclick=()=>round(2,[sc]);card.appendChild(nx);}
       else{const s1=res1[0];
-        card.innerHTML='<div class="fred" style="font-size:22px">Essai n°1 : '+s1+' / 5 → Essai n°2 : '+sc+' / 5 du premier coup</div>';
+        card.innerHTML='<div class="fred" style="font-size:22px">Essai n°1 : '+s1+' / 3 → Essai n°2 : '+sc+' / 3 du premier coup</div>';
         msg(zone,sc>=s1?"ok":"info",sc>s1?"📈 Vous avez progressé grâce aux erreurs corrigées !":(sc===s1?"Score stable : les mots retrouvés sont bien ancrés.":"Pas de progrès cette fois : c’est le signe qu’il faudrait réactiver ces mots plus tard."));
         learn(zone,"À retenir",d.why.replace("{S1}",s1).replace("{S2}",sc),ok);}
     }
@@ -1190,7 +1190,7 @@ const MISSIONS=[
  {name:"Le défi indonésien",ico:"💬",color:"var(--fb)",sub:"Pilier : retour d’information",
   steps:[
    {title:"Apa kabar ? Le défi indonésien",hint:"Utilisez la stratégie proposée : chacun s’occupe de 2 ou 3 mots et invente une image (ikan → « il y a un poisson dans le canal », buku → « un bouquin »). Pendant l’essai, lisez bien la lettre donnée après chaque erreur.",
-    render:(b,ok)=>indoGame(b,{why:"<p>Vous venez d’apprendre par <b>essai-erreur</b> : chaque erreur, suivie aussitôt d’un retour (une lettre de plus), a corrigé votre mémoire. Au 2e essai, sans indice, vous avez retrouvé {S2} mot(s) sur 5 du premier coup (contre {S1} au 1er essai).</p><p>L’erreur est une <mark class='f'>information</mark> utile pour apprendre. Ce qui marche : une <mark class='f'>stratégie</mark> (images mentales, partage du travail) et le fait de se <mark class='f'>tester</mark> en recevant un retour immédiat.</p>"},ok)},
+    render:(b,ok)=>indoGame(b,{why:"<p>Vous venez d’apprendre par <b>essai-erreur</b> : chaque erreur, suivie aussitôt d’un retour (une lettre de plus), a corrigé votre mémoire. Au 2e essai, sans indice, vous avez retrouvé {S2} mot(s) sur 3 du premier coup (contre {S1} au 1er essai).</p><p>L’erreur est une <mark class='f'>information</mark> utile pour apprendre. Ce qui marche : une <mark class='f'>stratégie</mark> (images mentales, partage du travail) et le fait de se <mark class='f'>tester</mark> en recevant un retour immédiat.</p>"},ok)},
    {title:"Le DS de Léo",hint:"Un bon retour aide Léo à analyser lui-même ses erreurs (connaissance, méthode, consigne), puis à se réentraîner.",
     render:(b,ok)=>choice(b,{q:"Léo rentre avec une note décevante à son dernier devoir surveillé. Il est découragé : « J’avais appris, je ne comprends pas. » Quelle réaction l’aidera le plus à progresser au prochain DS ?",
      opts:[{t:"« Tu as sûrement mal appris. Ce week-end, tu relis tout le chapitre deux fois. »",fb:"Bien intentionné, mais c’est un jugement… et relire est une stratégie passive : Léo risque de refaire les mêmes erreurs."},
@@ -1299,7 +1299,7 @@ $("#t2").innerHTML=`
 <h4>🎯 Mission 04 · Attention</h4>
 <ul><li>Test du gorille : le nombre de passes n’est pas vérifié. Question 2 : mot à compléter <b>GORILLE</b> (indices progressifs après chaque erreur, puis bouton « Révéler »). Version intégrée de secours si YouTube est bloqué.</li><li>Alerte : prof « attention » ; bonne nuit · Orientation : schéma ; dates · Contrôle exécutif : notification ; vérifier en calcul mental.</li><li>Téléphone : « son attention bascule… », puis lien vers la vidéo de Steve Masson.</li></ul>
 <h4>💬 Mission 05 · Le défi indonésien</h4>
-<ul><li>15 mots (2 min 30) : kucing chat · anjing chien · rumah maison · air eau · makan manger · minum boire · buku livre · sekolah école · guru professeur · murid élève · matahari soleil · bulan lune · pohon arbre · ikan poisson · tidur dormir.</li><li>5 mots tirés au hasard : essai 1 avec une lettre de plus à chaque erreur, essai 2 sans indice au départ ; on compare les deux scores.</li><li>DS de Léo (note décevante) : « On regarde ta copie ensemble ?… notion, méthode ou consigne… refais deux questions sans la correction ».</li></ul>
+<ul><li>15 mots (2 min 30) : kucing chat · anjing chien · rumah maison · air eau · makan manger · minum boire · buku livre · sekolah école · guru professeur · murid élève · matahari soleil · bulan lune · pohon arbre · ikan poisson · tidur dormir.</li><li>3 mots tirés au hasard : essai 1 avec une lettre de plus à chaque erreur, essai 2 sans indice au départ ; on compare les deux scores.</li><li>DS de Léo (note décevante) : « On regarde ta copie ensemble ?… notion, méthode ou consigne… refais deux questions sans la correction ».</li></ul>
 <h4>👓 Mission 06 · La phrase floue</h4>
 <ul><li>Passif : relire, surligner, recopier, vidéo · Actif : cartes, expliquer, refaire sans correction, schéma de mémoire.</li><li>La phrase se précise à chaque bonne réponse, mais 3 mots restent masqués : on les lit sur la carte de l’équipe à travers le filtre rouge. « Apprendre, ce n’est pas seulement <b>RELIRE</b>, c’est se <b>TESTER</b> et se poser des <b>QUESTIONS</b> » (LIRE accepté).</li><li>Bonne question : « Explique-moi une chose que tu as apprise… ».</li></ul>
 <h4>🔐 Code final (mots des sciences cognitives)</h4><ul><li>4 équipes : <b>TEST</b> · 5 : <b>OUBLI</b> · 6 : <b>RAPPEL</b> · 7 : <b>NEURONE</b>.</li><li>Équipe 1 ROUGE = 1re lettre, 2 BLEUE, 3 VERTE, 4 JAUNE, 5 VIOLETTE, 6 ORANGE, 7 ROSE.</li></ul>`;
