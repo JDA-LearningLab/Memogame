@@ -900,18 +900,18 @@ function motifGame(box,d,ok){
 
 
 // Mission 5 : le défi indonésien (retour d'information, essai-erreur)
-const INDO=[["kucing","chat"],["anjing","chien"],["rumah","maison"],["air","eau"],["makan","manger"],["minum","boire"],["buku","livre"],["sekolah","école"],["guru","professeur"],["murid","élève"],["matahari","soleil"],["bulan","lune"],["pohon","arbre"],["ikan","poisson"],["tidur","dormir"]];
+const INDO=[["kucing","chat"],["anjing","chien"],["makan","manger"],["buku","livre"],["sekolah","école"],["murid","élève"],["matahari","soleil"],["pohon","arbre"],["ikan","poisson"],["tidur","dormir"]];
 function indoGame(box,d,ok){
-  const STUDY=150;
-  box.appendChild(el("div",{class:"q"},"15 mots indonésiens à retenir avec leur traduction. Vous avez <b>2 min 30</b>. Ensuite, le labo vous en redemandera 3… avec des indices si vous vous trompez."));
-  box.appendChild(el("div",{class:"fiche",style:"background:#eef2ff;border-color:#5b3fd6;color:#2a3d8f"},"💡 Stratégie conseillée : répartissez-vous les mots (2 ou 3 chacun), inventez une image ou un lien pour chacun (<i>tidur</i> → « ti dort » → dormir), puis interrogez-vous les uns les autres avant la fin du temps."));
+  const STUDY=90;
+  box.appendChild(el("div",{class:"q"},"10 mots indonésiens à retenir avec leur traduction. Vous avez <b>1 min 30</b>. Ensuite, le labo vous en redemandera 3… avec des indices si vous vous trompez."));
+  box.appendChild(el("div",{class:"fiche",style:"background:#eef2ff;border-color:#5b3fd6;color:#2a3d8f"},"💡 Stratégie conseillée : répartissez-vous les mots (2 chacun), inventez une image ou un lien pour chacun (<i>tidur</i> → « ti dort » → dormir), puis interrogez-vous les uns les autres avant la fin du temps."));
   const grid=el("div",{class:"cards",style:"grid-template-columns:repeat(auto-fill,minmax(150px,1fr));margin-top:10px"});
   INDO.forEach(w=>grid.appendChild(el("div",{class:"ncard",style:"padding:12px;text-align:center"},'<div class="fred" style="font-size:22px;color:#3d8bff">'+w[0]+'</div><div style="font-weight:800">'+w[1]+'</div>')));
   box.appendChild(grid);
   const bar=el("div",{class:"row",style:"margin-top:12px"});
   const tm=el("div",{class:"fred",style:"font-size:22px"});const go=el("button",{class:"btn"},"🙈 Nous sommes prêts : cacher les mots");
   bar.append(tm,go);box.appendChild(bar);
-  let left=STUDY;tm.textContent="⏱️ 2:30";
+  let left=STUDY;tm.textContent="⏱️ 1:30";
   const iv=setInterval(()=>{left--;tm.textContent="⏱️ "+Math.floor(left/60)+":"+String(left%60).padStart(2,"0");if(left<=0)start();},1000);
   const pick=shuffle(INDO).slice(0,3);
   const zone=el("div");box.appendChild(zone);
@@ -1299,7 +1299,7 @@ $("#t2").innerHTML=`
 <h4>🎯 Mission 04 · Attention</h4>
 <ul><li>Gorille : mot à compléter <b>GORILLE</b> (version intégrée de secours si YouTube est bloqué).</li><li>Alerte : « ceci tombera au DS » ; bonne nuit · Orientation : document 2 ; verbes de consigne · Contrôle exécutif : notification ; relire la question du QCM.</li><li>Téléphone : « mon attention bascule… ».</li></ul>
 <h4>💬 Mission 05 · Retour d’information</h4>
-<ul><li>Défi indonésien : identique à la version parents (15 mots, 2 essais).</li><li>Copie rendue : « J’analyse chaque erreur (notion, méthode, consigne), puis je refais deux questions sans la correction ».</li></ul>
+<ul><li>Défi indonésien : identique à la version parents (10 mots en 1 min 30, 3 à retrouver, 2 essais).</li><li>Copie rendue : « J’analyse chaque erreur (notion, méthode, consigne), puis je refais deux questions sans la correction ».</li></ul>
 <h4>👓 Mission 06 · Engagement actif</h4>
 <ul><li>Passif : relire, surligner, recopier, vidéo · Actif : cartes, expliquer à un camarade, refaire sans correction, schéma bilan de mémoire.</li><li>Filtre rouge (même carte que les parents) : <b>RELIRE · TESTER · QUESTIONS</b> (LIRE accepté).</li><li>30 minutes : la <b>feuille blanche</b>.</li></ul>
 <h4>🔐 Code final</h4><ul><li>4 équipes : <b>TEST</b> · 5 : <b>OUBLI</b> · 6 : <b>RAPPEL</b> · 7 : <b>NEURONE</b>. Équipe 1 ROUGE = 1re lettre, 2 BLEUE, 3 VERTE, 4 JAUNE, 5 VIOLETTE, 6 ORANGE, 7 ROSE.</li></ul>
