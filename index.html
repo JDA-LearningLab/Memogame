@@ -1056,6 +1056,7 @@ function redCardSVG(seed,lines,opts){
 }
 
 
+
 /* ---------- version sans matériel (activable par le professeur) ---------- */
 let NOMAT=false;
 try{NOMAT=localStorage.getItem(LS+"_nomat")==="1";}catch(e){}
@@ -1125,8 +1126,8 @@ function redFilterWidget(){
 
 /* kit à imprimer : une carte par équipe */
 function buildKit(){
-  const k=document.querySelector("#printKit");k.innerHTML='<div class="knote">Mémogame · cartes « filtre rouge » (mission 6) · imprimer en couleur · tester une carte avec le filtre avant la séance</div>';
-  GROUP_NAMES.forEach((n,i)=>{k.appendChild(el("div",{class:"kcard",style:"border-color:"+GROUP_COLORS[i]},'<div class="khead" style="background:'+GROUP_COLORS[i]+'">Équipe '+n+' · Mission 6 · à lire à travers le filtre rouge 🔴</div>'+redCardSVG(i*13+114,RC_LINES,{size:62})));});
+  const k=document.querySelector("#printKit");k.innerHTML='';
+  GROUP_NAMES.forEach((n,i)=>{k.appendChild(el("div",{class:"kcard",style:"border-color:"+GROUP_COLORS[i]},'<div class="khead" style="background:'+GROUP_COLORS[i]+'">Équipe '+n+' · Mission 6</div>'+redCardSVG(i*13+114,RC_LINES,{size:62})));});
 }
 
 /* ---------- contenu ---------- */
