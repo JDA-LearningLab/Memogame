@@ -292,6 +292,46 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
   .kcard{width:180mm}
   .pzk{width:186mm}
 }
+
+.fm{width:190mm;box-sizing:border-box;margin:0 auto;padding:5mm 6mm;background:#fffdf7;color:#231f3d;font-family:Nunito,'Segoe UI',Arial,sans-serif;font-size:9.6pt;line-height:1.26;border-radius:4mm;position:relative}
+.fm *{box-sizing:border-box}
+.fm-head{display:flex;align-items:center;gap:4mm;background:linear-gradient(110deg,#2a2460,#5b3fd6);color:#fff;border-radius:4mm;padding:3mm 5mm}
+.fm-head .em{font-size:26pt;line-height:1}
+.fm-head h1{margin:0;font-size:19pt;font-family:Fredoka,Nunito,Arial,sans-serif;letter-spacing:.2px}
+.fm-head p{margin:1mm 0 0;font-size:10pt;opacity:.92}
+.fm-tag{margin-left:auto;background:#ffd23f;color:#231f3d;font-weight:800;border-radius:20mm;padding:1.5mm 4mm;font-size:10pt;white-space:nowrap}
+.fm-intro{margin:2.5mm 0 1.5mm;font-size:10pt}
+.fm-myths{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm;margin:2mm 0 2.5mm}
+.fm-myth{background:#fff;border:0.5mm solid #f1d4dc;border-radius:3mm;padding:2mm 2.5mm;font-size:9pt}
+.fm-myth b{display:block;color:#e5484d;font-size:9.4pt}
+.fm-myth.ok{border-color:#c9ecd8}.fm-myth.ok b{color:#1fa463}
+.fm-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5mm}
+.fm-p{border-radius:3.5mm;padding:2.5mm 3.5mm;background:#fff;border:0.6mm solid;position:relative}
+.fm-p h2{margin:0 0 1mm;font-size:12.5pt;font-family:Fredoka,Nunito,Arial,sans-serif;display:flex;align-items:center;gap:2mm}
+.fm-p .idea{font-weight:800;margin:0 0 1.5mm;font-size:9.8pt}
+.fm-p ul{margin:0;padding-left:4.5mm}
+.fm-p li{margin:0.4mm 0;font-size:9.2pt}
+.fm-att{border-color:#ff8a3d}.fm-att h2{color:#d4600f}
+.fm-eng{border-color:#22b573}.fm-eng h2{color:#13874f}
+.fm-fb{border-color:#3d8bff}.fm-fb h2{color:#1f63c9}
+.fm-cons{border-color:#9b5cff}.fm-cons h2{color:#6f2fe0}
+.fm-row{display:grid;grid-template-columns:1.15fr 1fr;gap:3mm;margin-top:2.5mm}
+.fm-box{background:#fff;border-radius:3.5mm;padding:3mm 3.5mm;border:0.6mm solid #e2dcf5}
+.fm-box h3{margin:0 0 1.5mm;font-size:11pt;font-family:Fredoka,Nunito,Arial,sans-serif;color:#5b3fd6}
+.fm-plan{display:flex;gap:1.5mm;margin-top:1.5mm}
+.fm-plan span{flex:1;text-align:center;background:#f1eaff;border-radius:2mm;padding:1.5mm 0;font-weight:800;font-size:9.5pt;color:#6f2fe0}
+.fm-extra{margin-top:2.5mm;border-radius:3.5mm;padding:3mm 3.5mm;background:#fff8dc;border:0.6mm dashed #f5b301}
+.fm-extra h3{margin:0 0 1.5mm;font-size:11pt;font-family:Fredoka,Nunito,Arial,sans-serif;color:#9a6b00}
+.fm-extra .cols{display:grid;grid-template-columns:1fr 1fr;gap:3mm;font-size:9.4pt}
+.fm-extra ul{margin:0;padding-left:4.5mm}
+.fm-defi{margin-top:2.5mm;display:grid;grid-template-columns:auto 1fr;gap:3mm;align-items:center;background:#2a2460;color:#fff;border-radius:3.5mm;padding:3mm 4mm}
+.fm-defi .em{font-size:20pt}
+.fm-defi b{color:#ffd23f}
+.fm-line{border-bottom:0.4mm dotted rgba(255,255,255,.7);height:6mm}
+.fm-foot{margin-top:2mm;font-size:8pt;color:#6b6690;text-align:center}
+.fm mark{background:#fff3a8;padding:0 .6mm;border-radius:1mm;color:inherit}
+
+.fmprev{overflow:auto;background:#ece8f7;padding:12px;border-radius:14px;margin-top:12px}
 </style>
 </head>
 <body>
@@ -411,6 +451,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <button data-t="t2">✅ Solutions</button>
         <button data-t="t3">🎤 Débriefing</button>
         <button data-t="t5">🧪 Tester une mission</button>
+        <button data-t="t7">📄 Fiche mémo</button>
         <button data-t="t6">🖨️ Kit à imprimer</button>
         <button data-t="t4">🛠️ Outils</button>
       </div>
@@ -445,6 +486,11 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <p>Ouvrez directement n’importe quelle mission pour la tester, sans refaire les précédentes. Les missions restent ensuite toutes ouvertes (mode professeur).</p>
         <div class="mlist" id="testList" style="max-width:560px"></div>
         <p class="muted" style="margin-top:10px">Ce mode remplace la partie enregistrée sur cet appareil : ne l’utilisez pas sur une tablette d’équipe en cours de jeu.</p>
+      </div>
+      <div class="tab" id="t7">
+        <p><b>Fiche mémo</b> à distribuer à la fin du jeu ou après le débriefing : l’essentiel à retenir pour mieux mémoriser (une page A4, à imprimer en couleur).</p>
+        <button class="btn" id="fmPrint">🖨️ Imprimer la fiche mémo</button>
+        <div class="fmprev"><div class="fm"><div class="fm-head"><div class="em">🧠</div><div><h1>Aider mon enfant à mémoriser</h1><p>Les 4 piliers de l’apprentissage · l’essentiel du Mémogame</p></div><div class="fm-tag">Parents</div></div><p class="fm-intro">Pas besoin de connaître la matière pour aider ! Le cerveau de votre enfant apprend grâce à <mark>4 piliers</mark> : voici comment les soutenir à la maison.</p><div class="fm-myths"><div class="fm-myth"><b>❌ Les styles d’apprentissage</b>Mots + images aident tout le monde, inutile de s’adapter à un « style ».</div><div class="fm-myth"><b>❌ Réviser en répondant aux messages</b>Le cerveau alterne, il ne fait pas deux choses à la fois.</div><div class="fm-myth ok"><b>✅ La plasticité cérébrale</b>Personne n’est « nul en maths » pour toujours : le cerveau change en apprenant.</div></div><div class="fm-grid"><div class="fm-p fm-att"><h2>🎯 Protéger son attention</h2><p class="idea">Ce qui n’est pas éclairé par l’attention n’est pas retenu.</p><ul><li>📵 Le téléphone <b>dans une autre pièce</b> pendant le travail</li><li>⏱️ Des séances courtes (20-30 min) et de <b>vraies pauses</b></li><li>🪑 Un espace de travail calme</li></ul></div><div class="fm-p fm-eng"><h2>🙋 Le rendre acteur</h2><p class="idea">Relire et surligner donnent l’illusion de savoir. Se tester fait retenir.</p><ul><li>🗣️ « <b>Explique-moi</b> ce que tu as appris, comme si j’étais ton élève »</li><li>🃏 L’interroger avec ses <b>cartes</b> question / réponse</li><li>🙅 Ne pas faire <b>à sa place</b> : l’effort, c’est lui qui apprend</li></ul></div><div class="fm-p fm-fb"><h2>💬 Dédramatiser l’erreur</h2><p class="idea">L’erreur est une information, pas un verdict.</p><ul><li>🔍 « Montre-moi ce que tu as raté, et pourquoi d’après toi ? »</li><li>👏 Féliciter l’<b>effort</b> et la <b>stratégie</b>, pas le « don »</li><li>🚫 Bannir « tu n’es pas fait pour… »</li></ul></div><div class="fm-p fm-cons"><h2>🌙 Réviser un peu, souvent</h2><p class="idea">On oublie vite, sauf si l’on réactive. La nuit consolide.</p><ul><li>📅 Afficher un <b>planning de réactivation</b> et cocher</li><li>🔄 Revoir aussi les anciens chapitres</li><li>😴 Protéger le <b>sommeil</b> : écrans coupés avant le coucher</li></ul></div></div><div class="fm-row"><div class="fm-box"><h3>📉 La courbe de l’oubli</h3><svg viewBox="0 0 200 70" style="width:100%;height:auto;max-height:22mm;display:block"><line x1="14" y1="6" x2="14" y2="58" stroke="#aaa"/><line x1="14" y1="58" x2="196" y2="58" stroke="#aaa"/><path d="M14 8 C 22 40, 40 52, 196 56" fill="none" stroke="#e5484d" stroke-width="2" stroke-dasharray="4 3"/><path d="M14 8 C 18 24, 22 28, 28 30 L28 8 C 36 20, 46 24, 58 26 L58 8 C 72 16, 88 20, 106 21 L106 8 C 130 13, 160 15, 196 16" fill="none" stroke="#9b5cff" stroke-width="2.6"/><text x="196" y="50" font-size="7" fill="#e5484d" text-anchor="end">sans réactivation</text><text x="196" y="29" font-size="7" fill="#9b5cff" text-anchor="end">réactivations espacées</text><text x="2" y="10" font-size="6" fill="#6b6690">100%</text><text x="105" y="67" font-size="6.5" fill="#6b6690" text-anchor="middle">temps</text></svg><div style="font-size:9pt;margin-top:1mm">Sans révision, plus de la <b>moitié</b> d’une leçon est oubliée dès le lendemain : c’est normal, et ça se combat !</div></div><div class="fm-box"><h3>📅 Le bon rythme</h3><div style="font-size:9.4pt">Après chaque leçon, <b>10 minutes</b> d’auto-test suffisent :</div><div class="fm-plan"><span>J+1</span><span>J+3</span><span>J+7</span><span>J+15</span><span>J+30</span></div><div style="font-size:9pt;margin-top:1.5mm">❌ Tout réviser la veille du contrôle = oublié la semaine suivante.</div></div></div><div class="fm-extra"><h3>💬 5 questions à poser à votre enfant</h3><div class="cols"><ul><li>« Qu’as-tu appris aujourd’hui ? Explique-moi. »</li><li>« Qu’est-ce que tu dois savoir faire pour le contrôle ? »</li><li>« Comment as-tu trouvé la réponse ? »</li></ul><ul><li>« Qu’est-ce qui était difficile ? »</li><li>« Quand vas-tu revoir ce chapitre ? »</li></ul></div></div><div class="fm-defi"><div class="em">🎯</div><div><div><b>Mon défi</b> : le réflexe que je teste à la maison cette semaine :</div><div class="fm-line"></div></div></div><div class="fm-foot">Mémogame · d’après Stanislas Dehaene, <i>Apprendre !</i> (Odile Jacob, 2018)</div></div></div>
       </div>
       <div class="tab" id="t6">
         <p>Version avec matériel : imprimez <b>une carte par équipe</b> (2 par page A4), <b>en couleur</b>. À l’œil nu, les mots sont noyés dans des lettres et gribouillis ; à travers un <b>filtre rouge</b> (papier cristal ou plastique rouge), le rouge, le rose et l’orange disparaissent et seuls les 3 mots cachés restent foncés.</p>
@@ -1371,6 +1417,7 @@ $("#nomatBtn").onclick=()=>setNomat(!NOMAT);
 $("#kitPrint").onclick=()=>{buildKit();try{window.print();}catch(e){}};
 $("#pzPrint").onclick=()=>{buildPuzzleKit();try{window.print();}catch(e){}};
 $("#kitPrev").innerHTML=redCardSVG(114,RC_LINES,{size:62});
+$("#fmPrint").onclick=()=>{document.querySelector("#printKit").innerHTML=document.querySelector(".fmprev").innerHTML;try{window.print();}catch(e){}};
 refreshNomat();
 buildDeck();renderHome();
 })();
