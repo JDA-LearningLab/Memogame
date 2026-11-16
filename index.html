@@ -276,6 +276,13 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
 .khead{color:#fff;font-weight:800;padding:6px 10px;font-family:Arial,sans-serif;font-size:14px}
 .knote{font-family:Arial,sans-serif;font-size:11px;color:#555;margin-bottom:4mm}
 .kprev{max-width:520px}
+.pzk{width:100%;margin:0 0 10mm;break-inside:avoid;page-break-inside:avoid;font-family:Arial,sans-serif}
+.pzh{font-size:12px;color:#444;margin-bottom:2mm}
+.pzrow{display:flex}
+.pzp{flex:1;border:2px dashed;border-right:none;background:#fff}
+.pzp:last-child{border-right:2px dashed}
+.pzb{color:#fff;font-weight:800;font-size:10px;text-align:center;padding:2px 0;letter-spacing:1px}
+.pzp svg{display:block;width:100%;height:auto;aspect-ratio:100/340}
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   @page{size:A4 portrait;margin:10mm}
@@ -283,6 +290,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
   body>*{display:none!important}
   body>#printKit{display:block!important}
   .kcard{width:180mm}
+  .pzk{width:186mm}
 }
 </style>
 </head>
@@ -403,7 +411,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <button data-t="t2">✅ Solutions</button>
         <button data-t="t3">🎤 Débriefing</button>
         <button data-t="t5">🧪 Tester une mission</button>
-        <button data-t="t6">🖨️ Cartes filtre rouge</button>
+        <button data-t="t6">🖨️ Kit à imprimer</button>
         <button data-t="t4">🛠️ Outils</button>
       </div>
       <div class="tab on" id="t1">
@@ -413,7 +421,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
           <li>Imprimer le <b>kit de salle</b> : pour chaque équipe, un puzzle de la courbe d’Ebbinghaus (mission 2) et une carte des mots cachés (mission 6, à lire avec un <b>filtre rouge</b>), à cacher dans la salle.</li>
           <li>Imprimer <b>une fiche bilan par parent</b> (ou une par équipe) et prévoir des stylos.</li>
           <li>Pas d’imprimante ou pas le temps de cacher le matériel ? Activez la <b>version sans matériel</b> (onglet 🛠️ Outils, sur chaque appareil, ou lien du jeu suivi de <b>#sans-materiel</b>) : puzzle et filtre rouge se font à l’écran.</li>
-          <li>Les cartes filtre rouge s’impriment depuis l’onglet <b>🖨️ Cartes filtre rouge</b>.</li>
+          <li>Les cartes filtre rouge et les puzzles de la courbe s’impriment depuis l’onglet <b>🖨️ Kit à imprimer</b>.</li>
           <li>Au tableau : autant de cases que d’équipes, numérotées, pour le mot de passe final.</li>
           <li>Sur chaque appareil : choisir le nombre d’équipes et la couleur de l’équipe, puis attendre le top départ.</li>
           <li>Pour tester ou projeter une mission précise : onglet <b>Outils</b> → « Ouvrir toutes les missions (mode professeur) ».</li>
@@ -442,6 +450,9 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <p>Version avec matériel : imprimez <b>une carte par équipe</b> (2 par page A4), <b>en couleur</b>. À l’œil nu, les mots sont noyés dans des lettres et gribouillis ; à travers un <b>filtre rouge</b> (papier cristal ou plastique rouge), le rouge, le rose et l’orange disparaissent et seuls les 3 mots cachés restent foncés.</p>
         <p class="muted">Conseil : testez une carte avec votre filtre avant la séance (le rendu dépend de l’imprimante). Si l’impression ne s’ouvre pas ici, ouvrez le jeu depuis son adresse GitHub.</p>
         <button class="btn" id="kitPrint">🖨️ Imprimer les 7 cartes</button>
+        <hr style="margin:18px 0;border:0;border-top:2px dashed #e2dcf5">
+        <p><b>Puzzle de la courbe d’Ebbinghaus (mission 2)</b> : une courbe par équipe (2 par page A4), à découper en <b>6 pièces</b> selon les pointillés puis à cacher dans la salle. Chaque pièce porte la couleur et le nom de l’équipe. Les valeurs à lire sont les mêmes que dans le jeu (58 %, 44 %, 34 %, 21 %).</p>
+        <button class="btn" id="pzPrint">🖨️ Imprimer les 7 puzzles</button>
         <p style="margin-top:14px"><b>Aperçu</b> (carte de l’équipe ROUGE) :</p>
         <div class="kprev" id="kitPrev"></div>
       </div>
@@ -1056,7 +1067,6 @@ function redCardSVG(seed,lines,opts){
 }
 
 
-
 /* ---------- version sans matériel (activable par le professeur) ---------- */
 let NOMAT=false;
 try{NOMAT=localStorage.getItem(LS+"_nomat")==="1";}catch(e){}
@@ -1068,7 +1078,7 @@ function refreshNomat(){
 }
 
 /* courbe d'Ebbinghaus (SVG) : vx = début de la zone visible, vw = largeur */
-const EBB={W:600,H:340,X:[60,118,168,250,300,360,440,570],V:[100,58,44,36,34,28,25,21],LBL:["0","20 min","1 h","9 h","1 jour","2 j","6 j","1 mois"]};
+const EBB={W:600,H:340,X:[60,118,168,248,318,376,452,570],V:[100,58,44,36,34,28,25,21],LBL:["0","20 min","1 h","9 h","1 jour","2 j","6 j","1 mois"]};
 function curveSVG(vx,vw){
   const {W,H,X,V,LBL}=EBB;const Y=v=>300-2.6*v;
   let g='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#fffdf6"/>';
@@ -1128,6 +1138,18 @@ function redFilterWidget(){
 function buildKit(){
   const k=document.querySelector("#printKit");k.innerHTML='';
   GROUP_NAMES.forEach((n,i)=>{k.appendChild(el("div",{class:"kcard",style:"border-color:"+GROUP_COLORS[i]},'<div class="khead" style="background:'+GROUP_COLORS[i]+'">Équipe '+n+' · Mission 6</div>'+redCardSVG(i*13+114,RC_LINES,{size:62})));});
+}
+
+/* kit à imprimer : puzzle de la courbe (6 pièces par équipe) */
+function buildPuzzleKit(){
+  const k=document.querySelector("#printKit");k.innerHTML="";
+  const N=6,PW=EBB.W/N;
+  GROUP_NAMES.forEach((n,i)=>{
+    const c=GROUP_COLORS[i];
+    let pieces="";
+    for(let p=0;p<N;p++){pieces+='<div class="pzp" style="border-color:'+c+'"><div class="pzb" style="background:'+c+'">'+n+'</div>'+curveSVG(p*PW,PW)+'</div>';}
+    k.appendChild(el("div",{class:"pzk"},'<div class="pzh">✂️ Équipe '+n+' · Mission 2 · découper selon les pointillés</div><div class="pzrow">'+pieces+'</div>'));
+  });
 }
 
 /* ---------- contenu ---------- */
@@ -1347,6 +1369,7 @@ document.addEventListener("keydown",e=>{
 
 $("#nomatBtn").onclick=()=>setNomat(!NOMAT);
 $("#kitPrint").onclick=()=>{buildKit();try{window.print();}catch(e){}};
+$("#pzPrint").onclick=()=>{buildPuzzleKit();try{window.print();}catch(e){}};
 $("#kitPrev").innerHTML=redCardSVG(114,RC_LINES,{size:62});
 refreshNomat();
 buildDeck();renderHome();
