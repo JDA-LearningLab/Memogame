@@ -258,6 +258,32 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
 .fill select{font-family:Nunito,'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;font-weight:800;font-size:16px;margin:0 4px}
 .cipher{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
 .cipher span{font-family:Fredoka,'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;font-size:22px;background:#1d1a3a;color:var(--lab);padding:8px 12px;border-radius:10px}
+
+.cpuz{display:flex;gap:6px;margin:10px 0;background:#fff;padding:8px;border-radius:14px;border:3px solid #ece8ff}
+.cpuz.done{display:block;padding:6px}
+.cpuz svg{display:block;width:100%;height:auto}
+.cpiece{flex:1;padding:0;border:3px solid #e2dcf5;border-radius:8px;background:#fff;cursor:pointer;transition:transform .15s}
+.cpiece svg{aspect-ratio:100/340}
+.cpiece.sel{border-color:#5b3fd6;transform:translateY(-6px);box-shadow:0 6px 14px rgba(91,63,214,.35)}
+.rcwrap{position:relative;max-width:680px;margin:14px auto;border-radius:14px;overflow:hidden;border:3px solid #e2dcf5;touch-action:none;user-select:none;-webkit-user-select:none}
+.rfilter{position:absolute;left:3%;top:6%;width:48%;height:62%;overflow:hidden;border-radius:16px;cursor:grab;touch-action:none;border:4px solid #b3001b;box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.rfilter:active{cursor:grabbing}
+.rfinner{position:absolute;filter:url(#rfx);pointer-events:none}
+.rfinner svg{display:block;width:100%;height:auto}
+.rflabel{position:absolute;left:0;right:0;bottom:4px;text-align:center;font-weight:800;font-size:13px;color:#fff;text-shadow:0 1px 2px #000;pointer-events:none}
+#printKit{display:none}
+.kcard{border:4px solid;border-radius:12px;overflow:hidden;margin:0 0 8mm;break-inside:avoid;page-break-inside:avoid;background:#fff}
+.khead{color:#fff;font-weight:800;padding:6px 10px;font-family:Arial,sans-serif;font-size:14px}
+.knote{font-family:Arial,sans-serif;font-size:11px;color:#555;margin-bottom:4mm}
+.kprev{max-width:520px}
+@media print{
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  @page{size:A4 portrait;margin:10mm}
+  html,body{background:#fff!important;min-height:0}
+  body>*{display:none!important}
+  body>#printKit{display:block!important}
+  .kcard{width:180mm}
+}
 </style>
 </head>
 <body>
@@ -290,6 +316,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
       <div><label for="teamName">Nom d’équipe (facultatif)</label><br><input id="teamName" maxlength="24" placeholder="Les Synapses…" style="width:100%;margin-top:6px"></div>
     </div>
     <div class="row" style="justify-content:space-between">
+      <div id="nomatBadge" class="fiche" style="display:none;margin:0 0 10px;width:100%">🧩 <b>Version sans matériel</b> : le puzzle et le filtre rouge se font directement à l’écran.</div>
       <button class="btn" id="startBtn">🚀 Entrer dans le labo</button>
       <div class="row">
         <button class="btn sec small" id="resumeBtn" style="display:none">↩️ Reprendre la partie</button>
@@ -376,6 +403,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <button data-t="t2">✅ Solutions</button>
         <button data-t="t3">🎤 Débriefing</button>
         <button data-t="t5">🧪 Tester une mission</button>
+        <button data-t="t6">🖨️ Cartes filtre rouge</button>
         <button data-t="t4">🛠️ Outils</button>
       </div>
       <div class="tab on" id="t1">
@@ -384,6 +412,8 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
           <li>Idéal en début d’année ou avant les premiers DS de spécialité, pour préparer les épreuves anticipées (français, maths). Former <b>6 ou 7 équipes</b> de 4 à 6 élèves (classe de 35 : 7 équipes de 5). <b>1 tablette ou ordinateur par équipe</b>, avec ce lien ouvert. Prévoir des écouteurs ou un son bas pour la vidéo du gorille.</li>
           <li>Imprimer le <b>kit de salle</b> (le même que pour le Mémogame parents) : pour chaque équipe, un puzzle de la courbe d’Ebbinghaus (mission 2) et une carte des mots cachés (mission 6, à lire avec un <b>filtre rouge</b>), à cacher dans la salle.</li>
           <li>Imprimer <b>une fiche bilan par élève</b>.</li>
+          <li>Pas d’imprimante ou pas le temps de cacher le matériel ? Activez la <b>version sans matériel</b> (onglet 🛠️ Outils, sur chaque appareil, ou lien du jeu suivi de <b>#sans-materiel</b>) : puzzle et filtre rouge se font à l’écran.</li>
+          <li>Les cartes filtre rouge s’impriment depuis l’onglet <b>🖨️ Cartes filtre rouge</b>.</li>
           <li>Au tableau : autant de cases que d’équipes, numérotées, pour le mot de passe final.</li>
           <li>Sur chaque appareil : choisir le nombre d’équipes et la couleur de l’équipe, puis attendre le top départ.</li>
           <li>Répartir des <b>rôles</b> dans chaque équipe (maître du temps, secrétaire de la fiche, chercheur d’objets, porte-parole) : c’est aussi de l’engagement actif !</li>
@@ -409,9 +439,20 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <div class="mlist" id="testList" style="max-width:560px"></div>
         <p class="muted" style="margin-top:10px">Ce mode remplace la partie enregistrée sur cet appareil : ne l’utilisez pas sur une tablette d’équipe en cours de jeu.</p>
       </div>
+      <div class="tab" id="t6">
+        <p>Version avec matériel : imprimez <b>une carte par équipe</b> (2 par page A4), <b>en couleur</b>. À l’œil nu, les mots sont noyés dans des lettres et gribouillis ; à travers un <b>filtre rouge</b> (papier cristal ou plastique rouge), le rouge, le rose et l’orange disparaissent et seuls les 3 mots cachés restent foncés.</p>
+        <p class="muted">Conseil : testez une carte avec votre filtre avant la séance (le rendu dépend de l’imprimante). Si l’impression ne s’ouvre pas ici, ouvrez le jeu depuis son adresse GitHub.</p>
+        <button class="btn" id="kitPrint">🖨️ Imprimer les 7 cartes</button>
+        <p style="margin-top:14px"><b>Aperçu</b> (carte de l’équipe ROUGE) :</p>
+        <div class="kprev" id="kitPrev"></div>
+      </div>
       <div class="tab" id="t4">
         <p><b>Mode professeur</b> : ouvre le jeu avec <b>les 6 missions et le code final débloqués</b>, à jouer dans n’importe quel ordre et autant de fois que vous voulez (pour préparer la séance, ou projeter une mission au débriefing). Cela remplace la partie enregistrée sur cet appareil.</p>
         <button class="btn" id="animMode">🧪 Ouvrir toutes les missions (mode professeur)</button>
+        <hr style="margin:18px 0;border:0;border-top:2px dashed #e2dcf5">
+        <p><b>🧩 Version sans matériel</b> : le puzzle de la courbe (mission 2) se reconstitue à l’écran et la carte brouillée (mission 6) se lit avec un <b>filtre rouge virtuel</b> à faire glisser. Rien à imprimer ni à cacher dans la salle.</p>
+        <p class="muted" style="margin-top:-6px">À activer <b>sur chaque appareil</b> avant la partie (le réglage reste mémorisé), ou bien donnez directement aux équipes le lien du jeu suivi de <b>#sans-materiel</b>.</p>
+        <button class="btn sec" id="nomatBtn"></button>
         <hr style="margin:18px 0;border:0;border-top:2px dashed #e2dcf5">
         <p><b>Réinitialiser cet appareil</b> : efface la partie enregistrée sur cette tablette.</p>
         <button class="btn sec" id="resetBtn">🧹 Réinitialiser la partie sur cet appareil</button>
@@ -426,6 +467,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
 
 </div>
 
+<div id="printKit"></div>
 <div class="modal" id="modal"><div class="card" id="modalCard"></div></div>
 <div id="deck"><div id="stage"></div>
   <div id="deckbar"><button id="dPrev">◀</button><button id="dNum">1/13</button><button id="dNext">▶</button><button id="dFull">⛶</button><button id="dClose">✕</button></div>
@@ -915,7 +957,7 @@ function blurMission(box,d,ok){
   const holder=el("div");box.appendChild(holder);
   classify(holder,{q:"Ces façons de réviser sont-elles actives ou passives ?",cats:["Actif","Passif"],items:d.items,
     why:d.why1,onChange:(n,tot)=>{bb.style.filter="blur("+(9*(1-n/tot)).toFixed(1)+"px)";}},()=>{
-      holder.innerHTML='<div class="fiche" style="background:#fff0f0;border-color:#e5484d;color:#8a1f24">🔴 Trois mots restent cachés… <b>Un objet de la salle vous permettra de retrouver la vue</b> : cherchez la carte de votre couleur et le <b>filtre rouge</b>, puis complétez la phrase.</div>';bb.style.filter="none";
+      holder.innerHTML=NOMAT?'<div class="fiche" style="background:#fff0f0;border-color:#e5484d;color:#8a1f24">🔴 Trois mots restent cachés dans la carte brouillée ci-dessous… <b>Faites glisser le filtre rouge</b> sur la carte pour retrouver la vue, puis complétez la phrase.</div>':'<div class="fiche" style="background:#fff0f0;border-color:#e5484d;color:#8a1f24">🔴 Trois mots restent cachés… <b>Un objet de la salle vous permettra de retrouver la vue</b> : cherchez la carte de votre couleur et le <b>filtre rouge</b>, puis complétez la phrase.</div>';if(NOMAT)holder.appendChild(redFilterWidget());bb.style.filter="none";
       const f=el("div",{class:"fill",style:"margin-top:14px"});
       f.innerHTML='Apprendre, ce n’est pas seulement <input data-a="RELIRE">, c’est se <input data-a="TESTER"> et se poser des <input data-a="QUESTIONS">.';
       holder.appendChild(f);
@@ -979,6 +1021,115 @@ function readCurve(box,d,ok){
     b.remove();ins.forEach(x=>x.disabled=true);msg(box,"ok","✅ Lecture graphique juste !");learn(box,"À retenir",d.why,ok);
   };
 }
+/* ---- Générateur de carte « filtre rouge » (texte caché) ---- */
+function redCardSVG(seed,lines,opts){
+  opts=opts||{};
+  let s=seed>>>0||1;const rnd=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};
+  const W=600,H=380;
+  const NOISE=["#ff1f1f","#ff3b8d","#ff6a00","#ff2bd6","#ff5a5a","#ff8ab8","#ff9a3c","#ff4fae"];
+  const TXT="#6aa1ef";
+  const CAMO=["#b6d9ff","#c0dfff","#aed3fb","#bbdbf8"];
+  const pick=a=>a[Math.floor(rnd()*a.length)];
+  const L="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let out=[];
+  out.push('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;background:#fff">');
+  out.push('<rect width="'+W+'" height="'+H+'" fill="#fff"/>');
+  const scrib=(n,pal)=>{for(let i=0;i<n;i++){const x=rnd()*W,y=rnd()*H,c=pick(pal||NOISE),w=(2+rnd()*4).toFixed(1);
+    const dx=(rnd()-.5)*90,dy=(rnd()-.5)*90,cx=x+(rnd()-.5)*120,cy=y+(rnd()-.5)*120;
+    out.push('<path d="M'+x.toFixed(0)+' '+y.toFixed(0)+' Q'+cx.toFixed(0)+' '+cy.toFixed(0)+' '+(x+dx).toFixed(0)+' '+(y+dy).toFixed(0)+'" stroke="'+c+'" stroke-width="'+w+'" fill="none" stroke-linecap="round"/>');}};
+  const scribT=n=>{for(let i=0;i<n;i++){const x=rnd()*W,y=rnd()*H,c=pick(NOISE),w=(1.2+rnd()*2).toFixed(1);const dx=(rnd()-.5)*90,dy=(rnd()-.5)*90,cx=x+(rnd()-.5)*120,cy=y+(rnd()-.5)*120;
+    out.push('<path d="M'+x.toFixed(0)+' '+y.toFixed(0)+' Q'+cx.toFixed(0)+' '+cy.toFixed(0)+' '+(x+dx).toFixed(0)+' '+(y+dy).toFixed(0)+'" stroke="'+c+'" stroke-width="'+w+'" fill="none" stroke-linecap="round"/>');}};
+  const letters=(n,min,max,pal)=>{for(let i=0;i<n;i++){const x=rnd()*W,y=rnd()*H,c=pick(pal||NOISE),fs=(min+rnd()*(max-min)).toFixed(0),r=((rnd()-.5)*50).toFixed(0);
+    out.push('<text x="'+x.toFixed(0)+'" y="'+y.toFixed(0)+'" font-size="'+fs+'" font-weight="800" fill="'+c+'" transform="rotate('+r+' '+x.toFixed(0)+' '+y.toFixed(0)+')" font-family="Arial Black,Arial,sans-serif">'+L[Math.floor(rnd()*26)]+'</text>');}};
+  const dots=n=>{for(let i=0;i<n;i++){out.push('<circle cx="'+(rnd()*W).toFixed(0)+'" cy="'+(rnd()*H).toFixed(0)+'" r="'+(2+rnd()*7).toFixed(1)+'" fill="'+pick(NOISE)+'"/>');}};
+  // fond : lettres leurres + gribouillis
+  letters(110,56,84,CAMO);scrib(90,CAMO);letters(60,40,90);scrib(170);dots(110);
+  // message caché
+  const lh=H/(lines.length+1);
+  const fs=opts.size||72;
+  lines.forEach((ln,i)=>{const y0=lh*(i+1)+26;const cw=fs*0.78;const x0=W/2-(ln.length-1)*cw/2;
+    ln.split("").forEach((ch,k)=>{if(ch===" ")return;const x=x0+k*cw+(rnd()-.5)*8,y=y0+(rnd()-.5)*14,r=((rnd()-.5)*16).toFixed(0);
+      out.push('<text x="'+x.toFixed(0)+'" y="'+y.toFixed(0)+'" text-anchor="middle" font-size="'+fs+'" font-weight="800" fill="'+TXT+'" transform="rotate('+r+' '+x.toFixed(0)+' '+y.toFixed(0)+')" font-family="Arial Black,Arial,sans-serif">'+ch+'</text>');});});
+  // camouflage par-dessus
+  letters(30,56,84,CAMO);letters(25,36,70);scribT(150);dots(60);
+  out.push('</svg>');
+  return out.join("");
+}
+
+
+/* ---------- version sans matériel (activable par le professeur) ---------- */
+let NOMAT=false;
+try{NOMAT=localStorage.getItem(LS+"_nomat")==="1";}catch(e){}
+if(location.hash==="#sans-materiel")NOMAT=true;
+function setNomat(v){NOMAT=v;try{localStorage.setItem(LS+"_nomat",v?"1":"0");}catch(e){}refreshNomat();}
+function refreshNomat(){
+  const b=document.querySelector("#nomatBadge");if(b)b.style.display=NOMAT?"":"none";
+  const t=document.querySelector("#nomatBtn");if(t)t.textContent=NOMAT?"✅ Version sans matériel ACTIVÉE sur cet appareil (cliquer pour désactiver)":"🧩 Activer la version sans matériel sur cet appareil";
+}
+
+/* courbe d'Ebbinghaus (SVG) : vx = début de la zone visible, vw = largeur */
+const EBB={W:600,H:340,X:[60,118,168,250,300,360,440,570],V:[100,58,44,36,34,28,25,21],LBL:["0","20 min","1 h","9 h","1 jour","2 j","6 j","1 mois"]};
+function curveSVG(vx,vw){
+  const {W,H,X,V,LBL}=EBB;const Y=v=>300-2.6*v;
+  let g='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#fffdf6"/>';
+  for(let v=0;v<=100;v+=10){g+='<line x1="'+X[0]+'" y1="'+Y(v)+'" x2="'+(W-14)+'" y2="'+Y(v)+'" stroke="'+(v%50?"#ece6d4":"#d6cfb8")+'" stroke-width="1"/>';
+    g+='<text x="'+(X[0]-6)+'" y="'+(Y(v)+4)+'" font-size="11" text-anchor="end" fill="#6b6690">'+v+'</text>';}
+  [1,2,4,7].forEach(i=>{g+='<line x1="'+X[i]+'" y1="'+Y(0)+'" x2="'+X[i]+'" y2="'+Y(100)+'" stroke="#5b3fd6" stroke-width="1.4" stroke-dasharray="5 4"/>';});
+  g+='<line x1="'+X[0]+'" y1="'+Y(0)+'" x2="'+(W-14)+'" y2="'+Y(0)+'" stroke="#444" stroke-width="2"/><line x1="'+X[0]+'" y1="'+Y(0)+'" x2="'+X[0]+'" y2="'+Y(100)+'" stroke="#444" stroke-width="2"/>';
+  X.forEach((x,i)=>{g+='<line x1="'+x+'" y1="'+Y(0)+'" x2="'+x+'" y2="'+(Y(0)+5)+'" stroke="#444"/><text x="'+x+'" y="'+(Y(0)+18)+'" font-size="11" text-anchor="middle" fill="#231f3d" font-weight="'+([1,2,4,7].includes(i)?"800":"400")+'">'+LBL[i]+'</text>';});
+  g+='<text x="16" y="'+Y(50)+'" font-size="12" fill="#6b6690" font-weight="700" transform="rotate(-90 16 '+Y(50)+')" text-anchor="middle">part de la liste retenue (%)</text>';
+  g+='<text x="'+((X[0]+W)/2)+'" y="'+(H-6)+'" font-size="12" fill="#6b6690" font-weight="700" text-anchor="middle">temps écoulé depuis l’apprentissage</text>';
+  // courbe lissée (Catmull-Rom)
+  const P=X.map((x,i)=>[x,Y(V[i])]);let d="M"+P[0][0]+" "+P[0][1];
+  for(let i=0;i<P.length-1;i++){const p0=P[Math.max(0,i-1)],p1=P[i],p2=P[i+1],p3=P[Math.min(P.length-1,i+2)];
+    const c1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6],c2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
+    d+=" C"+c1[0].toFixed(1)+" "+c1[1].toFixed(1)+" "+c2[0].toFixed(1)+" "+c2[1].toFixed(1)+" "+p2[0]+" "+p2[1];}
+  g+='<path d="'+d+'" fill="none" stroke="#9b5cff" stroke-width="4" stroke-linecap="round"/>';
+  P.forEach(p=>{g+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" fill="#9b5cff"/>';});
+  return '<svg viewBox="'+vx+' 0 '+vw+' '+H+'" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">'+g+'</svg>';
+}
+function curvePuzzle(box,done){
+  const N=6,PW=EBB.W/N;
+  box.appendChild(el("div",{class:"q",style:"margin-top:10px"},"🧩 Les 6 pièces de la courbe sont mélangées : <b>touchez deux pièces pour les échanger</b>, jusqu’à reconstituer la courbe."));
+  const row=el("div",{class:"cpuz"});box.appendChild(row);
+  let order;do{order=shuffle([...Array(N).keys()]);}while(order.every((p,i)=>p===i));
+  let sel=null;
+  function draw(){row.innerHTML="";order.forEach((p,i)=>{const b=el("button",{class:"cpiece"+(sel===i?" sel":"")+(p===i?" good":"")},curveSVG(p*PW,PW));
+    b.onclick=()=>{if(sel===null){sel=i;draw();return;}if(sel!==i){[order[sel],order[i]]=[order[i],order[sel]];}sel=null;draw();check();};row.appendChild(b);});}
+  function check(){if(order.every((p,i)=>p===i)){row.className="cpuz done";row.innerHTML=curveSVG(0,EBB.W);msg(box,"ok","✅ Courbe reconstituée ! Place à la lecture graphique.");done();}}
+  draw();
+}
+const _readCurve=readCurve;
+readCurve=function(box,d,ok){if(!NOMAT)return _readCurve(box,d,ok);curvePuzzle(box,()=>_readCurve(box,d,ok));};
+
+/* filtre rouge virtuel */
+const RC_LINES=["1 RELIRE","2 TESTER","3 QUESTIONS"];
+function redFilterWidget(){
+  if(!document.getElementById("rfxDefs")){const d=document.createElement("div");d.id="rfxDefs";d.style.cssText="position:absolute;width:0;height:0;overflow:hidden";
+    d.innerHTML='<svg width="0" height="0"><filter id="rfx" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="2.89 0 0 0 -1.097  0.68 0 0 0 -0.293  0.68 0 0 0 -0.293  0 0 0 1 0"/></filter></svg>';document.body.appendChild(d);}
+  const card=redCardSVG((S&&S.g?S.g:1)*13+101,RC_LINES,{size:62});
+  const w=el("div",{class:"rcwrap"});w.innerHTML=card;
+  const f=el("div",{class:"rfilter"});const inner=el("div",{class:"rfinner"});inner.innerHTML=card;f.appendChild(inner);
+  f.appendChild(el("span",{class:"rflabel"},"✋ filtre rouge"));w.appendChild(f);
+  let L=null,T=null;
+  function place(l,t){const W=w.clientWidth,H=w.clientHeight,fw=f.offsetWidth,fh=f.offsetHeight;if(!W)return;
+    if(l===null){l=W*.03;t=H*.06;}
+    l=Math.max(-fw*.6,Math.min(W-fw*.4,l));t=Math.max(-fh*.6,Math.min(H-fh*.4,t));L=l;T=t;
+    f.style.left=l+"px";f.style.top=t+"px";inner.style.width=W+"px";inner.style.left=(-l-4)+"px";inner.style.top=(-t-4)+"px";}
+  try{new ResizeObserver(()=>place(L,T)).observe(w);}catch(e){setTimeout(()=>place(L,T),100);}
+  let drag=null;
+  f.addEventListener("pointerdown",e=>{drag={x:e.clientX,y:e.clientY,l:L,t:T};try{f.setPointerCapture(e.pointerId);}catch(_){}e.preventDefault();});
+  f.addEventListener("pointermove",e=>{if(!drag)return;place(drag.l+e.clientX-drag.x,drag.t+e.clientY-drag.y);});
+  const up=()=>{drag=null;};f.addEventListener("pointerup",up);f.addEventListener("pointercancel",up);
+  return w;
+}
+
+/* kit à imprimer : une carte par équipe */
+function buildKit(){
+  const k=document.querySelector("#printKit");k.innerHTML='<div class="knote">Mémogame · cartes « filtre rouge » (mission 6) · imprimer en couleur · tester une carte avec le filtre avant la séance</div>';
+  GROUP_NAMES.forEach((n,i)=>{k.appendChild(el("div",{class:"kcard",style:"border-color:"+GROUP_COLORS[i]},'<div class="khead" style="background:'+GROUP_COLORS[i]+'">Équipe '+n+' · Mission 6 · à lire à travers le filtre rouge 🔴</div>'+redCardSVG(i*13+114,RC_LINES,{size:62})));});
+}
+
 /* ---------- contenu ---------- */
 const MISSIONS=[
  {name:"Vrai ou faux ?",ico:"🃏",color:"var(--sas)",sub:"La vérité vous ouvrira le chemin",
@@ -998,7 +1149,7 @@ const MISSIONS=[
  {name:"La courbe de l’oubli",ico:"📉",color:"var(--cons)",sub:"Pilier : consolidation",
   steps:[
    {title:"Le puzzle de la courbe",hint:"Il manque des pièces ? Plus le temps passe, moins on se souvient : 20 min ≈ 58 %, 1 h ≈ 44 %, 1 jour ≈ 34 %, 1 mois ≈ 21 %.",
-    render:(b,ok)=>{b.appendChild(el("p",{style:"margin:0"},"En <b>1885</b>, le psychologue Hermann Ebbinghaus apprend des listes de syllabes sans signification, puis mesure ce qu’il en garde avec le temps. Sa courbe a été découpée en <b>6 pièces de puzzle</b>, cachées dans la salle. 🧩 Retrouvez les pièces de la couleur de votre équipe, assemblez-les, puis faites la lecture graphique (c’est aussi une compétence de SVT !)."));
+    render:(b,ok)=>{b.appendChild(el("p",{style:"margin:0"},"En <b>1885</b>, le psychologue Hermann Ebbinghaus apprend des listes de syllabes sans signification, puis mesure ce qu’il en garde avec le temps. Sa courbe a été découpée en <b>6 pièces de puzzle</b>, "+(NOMAT?"mélangées à l’écran. 🧩 Remettez-les dans l’ordre, puis":"cachées dans la salle. 🧩 Retrouvez les pièces de la couleur de votre équipe, assemblez-les, puis")+" faites la lecture graphique (c’est aussi une compétence de SVT !)."));
      readCurve(b,{why:"<svg viewBox='0 0 420 160' style='width:100%;max-width:440px;display:block;margin:4px auto'><line x1='40' y1='10' x2='40' y2='130' stroke='#999'/><line x1='40' y1='130' x2='410' y2='130' stroke='#999'/><polyline points='40,12 70,61 100,77 190,89 400,106' fill='none' stroke='#9b5cff' stroke-width='4'/><g font-size='11' fill='#6b6690'><text x='6' y='16'>100%</text><text x='62' y='54'>58%</text><text x='96' y='70'>44%</text><text x='182' y='82'>34%</text><text x='384' y='100'>21%</text><text x='60' y='146'>20 min</text><text x='94' y='146'>1 h</text><text x='180' y='146'>1 jour</text><text x='380' y='146'>1 mois</text></g></svg><p>Sans réactivation, on oublie plus de la <mark class='f'>moitié</mark> d’une leçon dès le lendemain. Ce n’est pas que tu es « nul » : c’est le fonctionnement normal du cerveau.</p>"},ok);}},
    {title:"Le planning de révision de Axonus",hint:"Une première réactivation très tôt (J1 ou J2), puis des écarts de plus en plus grands : par exemple J1, J3, J7, J15.",
     render:(b,ok)=>plannerGame(b,{},ok)},
@@ -1193,6 +1344,10 @@ document.addEventListener("keydown",e=>{
 
 
 
+$("#nomatBtn").onclick=()=>setNomat(!NOMAT);
+$("#kitPrint").onclick=()=>{buildKit();try{window.print();}catch(e){}};
+$("#kitPrev").innerHTML=redCardSVG(114,RC_LINES,{size:62});
+refreshNomat();
 buildDeck();renderHome();
 })();
 </script>
