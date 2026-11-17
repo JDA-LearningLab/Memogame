@@ -276,13 +276,13 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
 .khead{color:#fff;font-weight:800;padding:6px 10px;font-family:Arial,sans-serif;font-size:14px}
 .knote{font-family:Arial,sans-serif;font-size:11px;color:#555;margin-bottom:4mm}
 .kprev{max-width:520px}
-.gpage{display:grid;grid-template-columns:1fr 1fr;gap:5mm;break-after:page;page-break-after:always;font-family:Arial,sans-serif}
+.gpage{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4mm;break-after:page;page-break-after:always;font-family:Arial,sans-serif}
 .gpage:last-child{break-after:auto;page-break-after:auto}
-.gcard{height:62mm;border-radius:5mm;padding:5mm;display:flex;flex-direction:column;justify-content:space-between;text-align:center;border:1mm dashed rgba(255,255,255,.7)}
-.gc1{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.9}
-.gc2{font-size:34px;font-weight:900;letter-spacing:3px}
-.gc3{font-size:13px;font-weight:700}
-.gc4{font-size:11px;background:rgba(255,255,255,.25);border-radius:3mm;padding:2mm}
+.gcard{height:50mm;border-radius:4mm;padding:3mm;display:flex;flex-direction:column;justify-content:space-between;text-align:center;border:1mm dashed rgba(255,255,255,.7)}
+.gc1{font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.9}
+.gc2{font-size:22px;font-weight:900;letter-spacing:2px}
+.gc3{font-size:10px;font-weight:700}
+.gc4{font-size:8.5px;line-height:1.25;background:rgba(255,255,255,.25);border-radius:2mm;padding:1.5mm}
 .pzk{width:100%;margin:0 0 10mm;break-inside:avoid;page-break-inside:avoid;font-family:Arial,sans-serif}
 .pzh{font-size:12px;color:#444;margin-bottom:2mm}
 .pzrow{display:flex}
@@ -508,7 +508,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <p><b>Puzzle de la courbe d’Ebbinghaus (mission 2)</b> : une courbe par équipe (2 par page A4), à découper en <b>6 pièces</b> selon les pointillés puis à cacher dans la salle. Chaque pièce porte la couleur et le nom de l’équipe. Les valeurs à lire sont les mêmes que dans le jeu (58 %, 44 %, 34 %, 21 %).</p>
         <button class="btn" id="pzPrint">🖨️ Imprimer les 7 puzzles</button>
         <hr style="margin:18px 0;border:0;border-top:2px dashed #e2dcf5">
-        <p><b>Cartes de répartition des équipes</b> : une carte par personne, à la couleur de son équipe (8 par page A4, à découper). À piocher à l’entrée de la salle : chacun rejoint la table de sa couleur.</p>
+        <p><b>Cartes de répartition des équipes</b> : une carte par personne, à la couleur de son équipe (15 par page A4, à découper). À piocher à l’entrée de la salle : chacun rejoint la table de sa couleur.</p>
         <div class="row" style="align-items:center"><label>Équipes <select id="gcT"><option>4</option><option>5</option><option>6</option><option selected>7</option></select></label><label>Personnes par équipe <select id="gcP"><option>4</option><option>5</option><option selected>6</option><option>7</option></select></label><button class="btn" id="gcPrint">🖨️ Imprimer les cartes</button></div>
         <p style="margin-top:14px"><b>Aperçu</b> (carte de l’équipe ROUGE) :</p>
         <div class="kprev" id="kitPrev"></div>
@@ -1215,9 +1215,9 @@ function buildCardsKit(nT,per){
   const k=document.querySelector("#printKit");k.innerHTML="";
   const cards=[];
   for(let i=0;i<nT;i++)for(let j=0;j<per;j++)cards.push([i,j]);
-  for(let p=0;p<cards.length;p+=8){
+  for(let p=0;p<cards.length;p+=15){
     const pg=el("div",{class:"gpage"});
-    cards.slice(p,p+8).forEach(([i,j])=>{const c=GROUP_COLORS[i],dark=(i===3);
+    cards.slice(p,p+15).forEach(([i,j])=>{const c=GROUP_COLORS[i],dark=(i===3);
       pg.appendChild(el("div",{class:"gcard",style:"background:"+c+";color:"+(dark?"#231f3d":"#fff")},
         '<div class="gc1">Mémogame · ton équipe</div><div class="gc2">'+GROUP_NAMES[i]+'</div><div class="gc3">Rejoins la table '+GROUP_NAMES[i].toLowerCase()+' !</div><div class="gc4">'+GC_FACTS[j%GC_FACTS.length]+'</div>'));});
     k.appendChild(pg);
