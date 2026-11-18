@@ -278,7 +278,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
 .kprev{max-width:520px}
 .gpage{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4mm;break-after:page;page-break-after:always;font-family:Arial,sans-serif}
 .gpage:last-child{break-after:auto;page-break-after:auto}
-.gcard{height:50mm;border-radius:4mm;padding:3mm;display:flex;flex-direction:column;justify-content:space-between;text-align:center;border:1mm dashed rgba(255,255,255,.7)}
+.gcard{height:52mm;break-inside:avoid;page-break-inside:avoid;border-radius:4mm;padding:3mm;display:flex;flex-direction:column;justify-content:space-between;text-align:center;border:1mm dashed rgba(255,255,255,.7)}
 .gc1{font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.9}
 .gc2{font-size:22px;font-weight:900;letter-spacing:2px}
 .gc3{font-size:10px;font-weight:700}
@@ -299,8 +299,9 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
   .kcard{width:180mm}
   .pzk{width:186mm}
   .gpage{width:186mm}
+  #printKit .fm,#printKit .fb{zoom:.88}
 }
-.qr-pg{display:grid;grid-template-columns:1fr 1fr;gap:5mm;font-family:Arial,sans-serif;color:#231f3d}.qr-c{height:63mm;border:1.2mm solid;border-radius:5mm;overflow:hidden;display:flex;flex-direction:column;background:#fff;break-inside:avoid}.qr-h{color:#fff;font-weight:900;font-size:18px;padding:2mm 4mm;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center}.qr-h small{font-size:10px;font-weight:700;opacity:.95;letter-spacing:0}.qr-b{flex:1;display:flex;align-items:center;gap:4mm;padding:3mm 4mm}.qr-b img{width:44mm;height:44mm;image-rendering:pixelated}.qr-t{font-size:11.5px;line-height:1.4}.qr-t b{font-size:13px}.qr-info{border-color:#5b3fd6}.qr-info .qr-t{font-size:10.5px;word-break:break-all}@media print{.qr-pg{width:186mm}}
+.qr-pg{display:grid;grid-template-columns:1fr 1fr;gap:5mm;font-family:Arial,sans-serif;color:#231f3d}.qr-c{height:56mm;border:1.2mm solid;border-radius:5mm;overflow:hidden;display:flex;flex-direction:column;background:#fff;break-inside:avoid}.qr-h{color:#fff;font-weight:900;font-size:18px;padding:2mm 4mm;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center}.qr-h small{font-size:10px;font-weight:700;opacity:.95;letter-spacing:0}.qr-b{flex:1;display:flex;align-items:center;gap:4mm;padding:3mm 4mm}.qr-b img{width:44mm;height:44mm;image-rendering:pixelated}.qr-t{font-size:11.5px;line-height:1.4}.qr-t b{font-size:13px}.qr-info{border-color:#5b3fd6}.qr-info .qr-t{font-size:10.5px;word-break:break-all}@media print{.qr-pg{width:186mm}}
 
 .fm{width:190mm;box-sizing:border-box;margin:0 auto;padding:5mm 6mm;background:#fffdf7;color:#231f3d;font-family:Nunito,'Segoe UI',Arial,sans-serif;font-size:9.6pt;line-height:1.26;border-radius:4mm;position:relative}
 .fm *{box-sizing:border-box}
@@ -509,7 +510,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <p><b>Puzzle de la courbe d’Ebbinghaus (mission 2)</b> : une courbe par équipe (2 par page A4), à découper en <b>6 pièces</b> selon les pointillés puis à cacher dans la salle. Chaque pièce porte la couleur et le nom de l’équipe. Les valeurs à lire sont les mêmes que dans le jeu (58 %, 44 %, 34 %, 21 %).</p>
         <button class="btn" id="pzPrint">🖨️ Imprimer les 7 puzzles</button>
         <hr style="margin:18px 0;border:0;border-top:2px dashed #e2dcf5">
-        <p><b>Cartes de répartition des équipes</b> : une carte par personne, à la couleur de son équipe (15 par page A4, à découper). À piocher à l’entrée de la salle : chacun rejoint la table de sa couleur.</p>
+        <p><b>Cartes de répartition des équipes</b> : une carte par personne, à la couleur de son équipe (12 par page A4, à découper). À piocher à l’entrée de la salle : chacun rejoint la table de sa couleur.</p>
         <div class="row" style="align-items:center"><label>Équipes <select id="gcT"><option>4</option><option>5</option><option>6</option><option selected>7</option></select></label><label>Personnes par équipe <select id="gcP"><option>4</option><option>5</option><option selected>6</option><option>7</option></select></label><button class="btn" id="gcPrint">🖨️ Imprimer les cartes</button></div>
         <hr style="margin:18px 0;border:0;border-top:2px dashed #e2dcf5">
         <p><b>QR codes de table</b> : une carte par table, à la couleur de l’équipe, avec le QR code qui ouvre ce jeu (8 cartes par page A4 : 7 tables + 1 carte avec l’adresse écrite).</p>
@@ -1220,9 +1221,9 @@ function buildCardsKit(nT,per){
   const k=document.querySelector("#printKit");k.innerHTML="";
   const cards=[];
   for(let i=0;i<nT;i++)for(let j=0;j<per;j++)cards.push([i,j]);
-  for(let p=0;p<cards.length;p+=15){
+  for(let p=0;p<cards.length;p+=12){
     const pg=el("div",{class:"gpage"});
-    cards.slice(p,p+15).forEach(([i,j])=>{const c=GROUP_COLORS[i],dark=(i===3);
+    cards.slice(p,p+12).forEach(([i,j])=>{const c=GROUP_COLORS[i],dark=(i===3);
       pg.appendChild(el("div",{class:"gcard",style:"background:"+c+";color:"+(dark?"#231f3d":"#fff")},
         '<div class="gc1">Mémogame · ton équipe</div><div class="gc2">'+GROUP_NAMES[i]+'</div><div class="gc3">Rejoins la table '+GROUP_NAMES[i].toLowerCase()+' !</div><div class="gc4">'+GC_FACTS[j%GC_FACTS.length]+'</div>'));});
     k.appendChild(pg);
