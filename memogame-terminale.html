@@ -1128,37 +1128,34 @@ function readCurve(box,d,ok){
     b.remove();ins.forEach(x=>x.disabled=true);msg(box,"ok","✅ Lecture graphique juste !");learn(box,"À retenir",d.why,ok);
   };
 }
-/* ---- Générateur de carte « filtre rouge » (texte caché) ---- */
+/* ---- Générateur de carte « filtre rouge » (texte caché) ----
+   Message en CYAN pur (l'encre cyan absorbe le rouge : il paraît NOIR à travers le filtre).
+   Tout le brouillage est en rouge / rose / orange / jaune (couleurs qui laissent passer le rouge :
+   elles DISPARAISSENT à travers le filtre, comme le papier). Aucun leurre bleu. */
 function redCardSVG(seed,lines,opts){
   opts=opts||{};
   let s=seed>>>0||1;const rnd=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};
   const W=600,H=380;
-  const NOISE=["#ff1f1f","#ff3b8d","#ff6a00","#ff2bd6","#ff5a5a","#ff8ab8","#ff9a3c","#ff4fae"];
-  const TXT="#6aa1ef";
-  const CAMO=["#b6d9ff","#c0dfff","#aed3fb","#bbdbf8"];
+  const NOISE=["#ff0000","#ff2a6d","#ff6a00","#ff3cbe","#ffb000","#ff4d4d","#ff7fbf","#ffd000"];
+  const HATCH=["#ff0000","#ff2a6d","#ff6a00","#ff3cbe"];
+  const TXT="#00aeef";
   const pick=a=>a[Math.floor(rnd()*a.length)];
   const L="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const f0=n=>n.toFixed(0);
   let out=[];
   out.push('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;background:#fff">');
-  out.push('<rect width="'+W+'" height="'+H+'" fill="#fff"/>');
-  const scrib=(n,pal)=>{for(let i=0;i<n;i++){const x=rnd()*W,y=rnd()*H,c=pick(pal||NOISE),w=(2+rnd()*4).toFixed(1);
-    const dx=(rnd()-.5)*90,dy=(rnd()-.5)*90,cx=x+(rnd()-.5)*120,cy=y+(rnd()-.5)*120;
-    out.push('<path d="M'+x.toFixed(0)+' '+y.toFixed(0)+' Q'+cx.toFixed(0)+' '+cy.toFixed(0)+' '+(x+dx).toFixed(0)+' '+(y+dy).toFixed(0)+'" stroke="'+c+'" stroke-width="'+w+'" fill="none" stroke-linecap="round"/>');}};
-  const scribT=n=>{for(let i=0;i<n;i++){const x=rnd()*W,y=rnd()*H,c=pick(NOISE),w=(1.2+rnd()*2).toFixed(1);const dx=(rnd()-.5)*90,dy=(rnd()-.5)*90,cx=x+(rnd()-.5)*120,cy=y+(rnd()-.5)*120;
-    out.push('<path d="M'+x.toFixed(0)+' '+y.toFixed(0)+' Q'+cx.toFixed(0)+' '+cy.toFixed(0)+' '+(x+dx).toFixed(0)+' '+(y+dy).toFixed(0)+'" stroke="'+c+'" stroke-width="'+w+'" fill="none" stroke-linecap="round"/>');}};
-  const letters=(n,min,max,pal)=>{for(let i=0;i<n;i++){const x=rnd()*W,y=rnd()*H,c=pick(pal||NOISE),fs=(min+rnd()*(max-min)).toFixed(0),r=((rnd()-.5)*50).toFixed(0);
-    out.push('<text x="'+x.toFixed(0)+'" y="'+y.toFixed(0)+'" font-size="'+fs+'" font-weight="800" fill="'+c+'" transform="rotate('+r+' '+x.toFixed(0)+' '+y.toFixed(0)+')" font-family="Arial Black,Arial,sans-serif">'+L[Math.floor(rnd()*26)]+'</text>');}};
-  const dots=n=>{for(let i=0;i<n;i++){out.push('<circle cx="'+(rnd()*W).toFixed(0)+'" cy="'+(rnd()*H).toFixed(0)+'" r="'+(2+rnd()*7).toFixed(1)+'" fill="'+pick(NOISE)+'"/>');}};
-  // fond : lettres leurres + gribouillis
-  letters(110,56,84,CAMO);scrib(90,CAMO);letters(60,40,90);scrib(170);dots(110);
-  // message caché
-  const lh=H/(lines.length+1);
-  const fs=opts.size||72;
-  lines.forEach((ln,i)=>{const y0=lh*(i+1)+26;const cw=fs*0.78;const x0=W/2-(ln.length-1)*cw/2;
-    ln.split("").forEach((ch,k)=>{if(ch===" ")return;const x=x0+k*cw+(rnd()-.5)*8,y=y0+(rnd()-.5)*14,r=((rnd()-.5)*16).toFixed(0);
-      out.push('<text x="'+x.toFixed(0)+'" y="'+y.toFixed(0)+'" text-anchor="middle" font-size="'+fs+'" font-weight="800" fill="'+TXT+'" transform="rotate('+r+' '+x.toFixed(0)+' '+y.toFixed(0)+')" font-family="Arial Black,Arial,sans-serif">'+ch+'</text>');});});
-  // camouflage par-dessus
-  letters(30,56,84,CAMO);letters(25,36,70);scribT(150);dots(60);
+  out.push('<rect width="'+W+'" height="'+H+'" fill="#ffe4e4"/>');
+  const letters=(n,min,max)=>{for(let i=0;i<n;i++){const x=rnd()*W,y=rnd()*H,fs=f0(min+rnd()*(max-min)),r=f0((rnd()-.5)*40);
+    out.push('<text x="'+f0(x)+'" y="'+f0(y)+'" font-size="'+fs+'" font-weight="900" fill="'+pick(NOISE)+'" transform="rotate('+r+' '+f0(x)+' '+f0(y)+')" font-family="Arial Black,Arial,sans-serif">'+L[Math.floor(rnd()*26)]+'</text>');}};
+  const scrib=(n,wmin,wmax)=>{for(let i=0;i<n;i++){const x=rnd()*W,y=rnd()*H,w=(wmin+rnd()*(wmax-wmin)).toFixed(1);
+    out.push('<path d="M'+f0(x)+' '+f0(y)+' Q'+f0(x+(rnd()-.5)*120)+' '+f0(y+(rnd()-.5)*120)+' '+f0(x+(rnd()-.5)*90)+' '+f0(y+(rnd()-.5)*90)+'" stroke="'+pick(NOISE)+'" stroke-width="'+w+'" fill="none" stroke-linecap="round"/>');}};
+  letters(90,50,86);scrib(150,2,5);
+  const fs=opts.size||66,lh=H/(lines.length+1);
+  lines.forEach((ln,i)=>{const y0=lh*(i+1)+fs*.36;const cw=fs*.8;const x0=W/2-(ln.length-1)*cw/2;
+    ln.split("").forEach((ch,k)=>{if(ch===" ")return;const x=x0+k*cw+(rnd()-.5)*6,y=y0+(rnd()-.5)*10,r=f0((rnd()-.5)*12);
+      out.push('<text x="'+f0(x)+'" y="'+f0(y)+'" text-anchor="middle" font-size="'+fs+'" font-weight="900" fill="'+TXT+'" transform="rotate('+r+' '+f0(x)+' '+f0(y)+')" font-family="Arial Black,Arial,sans-serif">'+ch+'</text>');});});
+  for(let y=-W;y<H+W;y+=(opts.hatch||6.5)){out.push('<line x1="0" y1="'+y+'" x2="'+W+'" y2="'+f0(y+W*.55)+'" stroke="'+pick(HATCH)+'" stroke-width="'+(opts.hw||3)+'"/>');}
+  letters(14,40,70);scrib(70,1.2,2.5);
   out.push('</svg>');
   return out.join("");
 }
