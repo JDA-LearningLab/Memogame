@@ -1128,34 +1128,44 @@ function readCurve(box,d,ok){
     b.remove();ins.forEach(x=>x.disabled=true);msg(box,"ok","✅ Lecture graphique juste !");learn(box,"À retenir",d.why,ok);
   };
 }
-/* ---- Générateur de carte « filtre rouge » (texte caché) ----
-   Message en CYAN pur (l'encre cyan absorbe le rouge : il paraît NOIR à travers le filtre).
-   Tout le brouillage est en rouge / rose / orange / jaune (couleurs qui laissent passer le rouge :
-   elles DISPARAISSENT à travers le filtre, comme le papier). Aucun leurre bleu. */
+/* ---- Générateur de carte « filtre rouge » (texte caché, grille « mots mêlés ») ----
+   Toute la carte est une grille de lettres identiques (même police, même taille, même alignement).
+   Les lettres du message sont en CYAN (l'encre cyan bloque le rouge : elles paraissent NOIRES à travers le filtre).
+   Toutes les autres lettres et le brouillage sont en couleurs riches en rouge (rouge, rose, orange, jaune, violet-rose) :
+   elles DISPARAISSENT à travers le filtre. Un voile rouge translucide ternit le cyan à l'œil nu. */
 function redCardSVG(seed,lines,opts){
   opts=opts||{};
   let s=seed>>>0||1;const rnd=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};
   const W=600,H=380;
-  const NOISE=["#ff0000","#ff2a6d","#ff6a00","#ff3cbe","#ffb000","#ff4d4d","#ff7fbf","#ffd000"];
+  const NOISE=["#ff0000","#ff2a6d","#ff6a00","#ff3cbe","#ffb000","#ff4d4d","#ff5ad2","#ff7fbf","#ff8a00","#ff1f8f"];
   const HATCH=["#ff0000","#ff2a6d","#ff6a00","#ff3cbe"];
-  const TXT="#00aeef";
+  const TXT="#1fb6f0";
   const pick=a=>a[Math.floor(rnd()*a.length)];
   const L="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const f0=n=>n.toFixed(0);
+  const maxLen=Math.max(...lines.map(l=>l.length));
+  /* chaque lettre du message est séparée de la suivante par une lettre leurre */
+  const span=maxLen*2-1, COLS=Math.max(span+2,14), cw=W/COLS;
+  const ROWS=Math.max(lines.length*2+1,Math.round(H/(cw*1.12))), rh=H/ROWS, fs=Math.min(cw*1.08,rh*.95);
   let out=[];
   out.push('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block;background:#fff">');
   out.push('<rect width="'+W+'" height="'+H+'" fill="#ffe4e4"/>');
-  const letters=(n,min,max)=>{for(let i=0;i<n;i++){const x=rnd()*W,y=rnd()*H,fs=f0(min+rnd()*(max-min)),r=f0((rnd()-.5)*40);
-    out.push('<text x="'+f0(x)+'" y="'+f0(y)+'" font-size="'+fs+'" font-weight="900" fill="'+pick(NOISE)+'" transform="rotate('+r+' '+f0(x)+' '+f0(y)+')" font-family="Arial Black,Arial,sans-serif">'+L[Math.floor(rnd()*26)]+'</text>');}};
   const scrib=(n,wmin,wmax)=>{for(let i=0;i<n;i++){const x=rnd()*W,y=rnd()*H,w=(wmin+rnd()*(wmax-wmin)).toFixed(1);
     out.push('<path d="M'+f0(x)+' '+f0(y)+' Q'+f0(x+(rnd()-.5)*120)+' '+f0(y+(rnd()-.5)*120)+' '+f0(x+(rnd()-.5)*90)+' '+f0(y+(rnd()-.5)*90)+'" stroke="'+pick(NOISE)+'" stroke-width="'+w+'" fill="none" stroke-linecap="round"/>');}};
-  letters(90,50,86);scrib(150,2,5);
-  const fs=opts.size||66,lh=H/(lines.length+1);
-  lines.forEach((ln,i)=>{const y0=lh*(i+1)+fs*.36;const cw=fs*.8;const x0=W/2-(ln.length-1)*cw/2;
-    ln.split("").forEach((ch,k)=>{if(ch===" ")return;const x=x0+k*cw+(rnd()-.5)*6,y=y0+(rnd()-.5)*10,r=f0((rnd()-.5)*12);
-      out.push('<text x="'+f0(x)+'" y="'+f0(y)+'" text-anchor="middle" font-size="'+fs+'" font-weight="900" fill="'+TXT+'" transform="rotate('+r+' '+f0(x)+' '+f0(y)+')" font-family="Arial Black,Arial,sans-serif">'+ch+'</text>');});});
-  for(let y=-W;y<H+W;y+=(opts.hatch||6.5)){out.push('<line x1="0" y1="'+y+'" x2="'+W+'" y2="'+f0(y+W*.55)+'" stroke="'+pick(HATCH)+'" stroke-width="'+(opts.hw||3)+'"/>');}
-  letters(14,40,70);scrib(70,1.2,2.5);
+  scrib(70,2,4);
+  const msgRow={};lines.forEach((ln,i)=>{msgRow[Math.round((i+.5)*ROWS/lines.length-.5)]=ln;});
+  for(let r=0;r<ROWS;r++){
+    const ln=msgRow[r]; const lspan=ln?ln.length*2-1:0; const start=ln?Math.floor(rnd()*(COLS-lspan+1)):0;
+    for(let c=0;c<COLS;c++){
+      const x=cw*(c+.5)+(rnd()-.5)*4, y=rh*(r+.5)+fs*.36+(rnd()-.5)*4, rot=f0((rnd()-.5)*14);
+      let ch=L[Math.floor(rnd()*26)], col=pick(NOISE);
+      const k=c-start; if(ln && k>=0 && k<lspan && k%2===0 && ln[k/2]!==" "){ch=ln[k/2]; col=TXT;}
+      out.push('<text x="'+f0(x)+'" y="'+f0(y)+'" text-anchor="middle" font-size="'+f0(fs)+'" font-weight="900" fill="'+col+'" transform="rotate('+rot+' '+f0(x)+' '+f0(y)+')" font-family="Arial Black,Arial,sans-serif">'+ch+'</text>');
+    }
+  }
+  for(let y=-W;y<H+W;y+=(opts.hatch||6.5)){out.push('<line x1="0" y1="'+y+'" x2="'+W+'" y2="'+f0(y+W*.55)+'" stroke="'+pick(HATCH)+'" stroke-width="'+(opts.hw||2.4)+'"/>');}
+  scrib(40,1.2,2.2);
+  out.push('<rect width="'+W+'" height="'+H+'" fill="#ff2a3a" opacity="'+(opts.veil==null?.42:opts.veil)+'"/>');
   out.push('</svg>');
   return out.join("");
 }
@@ -1207,7 +1217,7 @@ const _readCurve=readCurve;
 readCurve=function(box,d,ok){if(!NOMAT)return _readCurve(box,d,ok);curvePuzzle(box,()=>_readCurve(box,d,ok));};
 
 /* filtre rouge virtuel */
-const RC_LINES=["1 RELIRE","2 TESTER","3 QUESTIONS"];
+const RC_LINES=["RELIRE","TESTER","QUESTIONS"];
 function redFilterWidget(){
   if(!document.getElementById("rfxDefs")){const d=document.createElement("div");d.id="rfxDefs";d.style.cssText="position:absolute;width:0;height:0;overflow:hidden";
     d.innerHTML='<svg width="0" height="0"><filter id="rfx" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="2.89 0 0 0 -1.097  0.68 0 0 0 -0.293  0.68 0 0 0 -0.293  0 0 0 1 0"/></filter></svg>';document.body.appendChild(d);}
