@@ -1137,9 +1137,9 @@ function redCardSVG(seed,lines,opts){
   opts=opts||{};
   let s=seed>>>0||1;const rnd=()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296;};
   const W=600,H=380;
-  const NOISE=["#ff0000","#ff2a6d","#ff6a00","#ff3cbe","#ffb000","#ff4d4d","#ff5ad2","#ff7fbf","#ff8a00","#ff1f8f"];
+  const NOISE=["#ff0000","#ff2a6d","#ff6a00","#ff3cbe","#ff5ad2","#ff1f8f","#b49cff","#c3a3ff","#a98fff","#bfa8ff","#ffb000"];
   const HATCH=["#ff0000","#ff2a6d","#ff6a00","#ff3cbe"];
-  const TXT="#1fb6f0";
+  const TXT=opts.txt||"#4fb8ee";
   const pick=a=>a[Math.floor(rnd()*a.length)];
   const L="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const f0=n=>n.toFixed(0);
@@ -1163,7 +1163,7 @@ function redCardSVG(seed,lines,opts){
       out.push('<text x="'+f0(x)+'" y="'+f0(y)+'" text-anchor="middle" font-size="'+f0(fs)+'" font-weight="900" fill="'+col+'" transform="rotate('+rot+' '+f0(x)+' '+f0(y)+')" font-family="Arial Black,Arial,sans-serif">'+ch+'</text>');
     }
   }
-  for(let y=-W;y<H+W;y+=(opts.hatch||6.5)){out.push('<line x1="0" y1="'+y+'" x2="'+W+'" y2="'+f0(y+W*.55)+'" stroke="'+pick(HATCH)+'" stroke-width="'+(opts.hw||2.4)+'"/>');}
+  for(let y=-W;y<H+W;y+=(opts.hatch||6)){out.push('<line x1="0" y1="'+y+'" x2="'+W+'" y2="'+f0(y+W*.55)+'" stroke="'+pick(HATCH)+'" stroke-width="'+(opts.hw||3.2)+'"/>');}
   scrib(40,1.2,2.2);
   out.push('<rect width="'+W+'" height="'+H+'" fill="#ff2a3a" opacity="'+(opts.veil==null?.42:opts.veil)+'"/>');
   out.push('</svg>');
