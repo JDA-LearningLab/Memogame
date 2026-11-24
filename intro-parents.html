@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mémogame – Intro du Professeur Synapse</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--att:#ff8a3d;--eng:#22b573;--fb:#3d8bff;--cons:#9b5cff;--gold:#ffd23f}
+*{box-sizing:border-box}
+body{margin:0;background:#05070f;color:#fff;font-family:Nunito,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;padding:12px}
+.btn{font:800 15px Nunito;border:0;border-radius:12px;padding:10px 16px;cursor:pointer;background:#5b3fd6;color:#fff;box-shadow:0 3px 0 #3b25a3}
+.btn.sec{background:#26305a;box-shadow:0 3px 0 #141a35}
+select{font:700 14px Nunito;padding:6px 8px;border-radius:10px}
+.screen{position:relative;width:min(100vw,1100px);aspect-ratio:16/9;overflow:hidden;background:#0b1430;border-radius:14px}
+#scene{position:absolute;inset:0;transform-origin:34% 42%;transition:transform 1.6s cubic-bezier(.6,.05,.3,1)}
+#scene.close{transform:scale(1.85)}
+#scene.mid{transform:scale(1.35)}
+svg{display:block;width:100%;height:100%}
+/* écran du labo (HTML superposé) */
+#mon{position:absolute;left:58%;top:16%;width:34%;height:40%;display:flex;flex-wrap:wrap;gap:3%;align-content:center;justify-content:center;padding:2%;pointer-events:none}
+.chip{background:rgba(255,255,255,.12);border:2px solid rgba(160,210,255,.6);border-radius:12px;padding:3% 4%;font:800 clamp(10px,1.7vw,20px) Nunito;position:relative;animation:pop .45s cubic-bezier(.3,1.6,.5,1)}
+.chip .x{position:absolute;inset:-6px;display:grid;place-items:center;font:900 clamp(26px,4vw,52px) Fredoka;color:#ff3b4f;opacity:0;transform:scale(2.2) rotate(-12deg);transition:all .35s cubic-bezier(.3,1.6,.5,1)}
+.chip.no .x{opacity:1;transform:scale(1) rotate(-12deg)}
+.chip.no{filter:grayscale(.6);opacity:.7}
+@keyframes pop{0%{transform:scale(0)}}
+.pil{width:20%;border-radius:8px 8px 0 0;display:flex;align-items:flex-end;justify-content:center;font:800 clamp(8px,1.2vw,14px) Nunito;padding-bottom:4%;height:0;transition:height .8s;align-self:flex-end}
+#mon.pillars{align-content:flex-end;align-items:flex-end;flex-wrap:nowrap;gap:2%}
+/* bandeaux */
+#title{position:absolute;left:4%;bottom:7%;background:rgba(10,16,40,.85);border-left:6px solid var(--gold);padding:1.2% 2%;border-radius:8px;transform:translateX(-120%);transition:transform .7s cubic-bezier(.3,1.4,.5,1)}
+#title.on{transform:none}
+#title b{display:block;font:700 clamp(14px,2.4vw,28px) Fredoka}
+#title span{font-size:clamp(10px,1.4vw,16px);opacity:.85}
+#sub{display:none;position:absolute;left:50%;bottom:2.5%;transform:translateX(-50%);width:88%;text-align:center;font:800 clamp(12px,1.9vw,22px) Nunito;text-shadow:0 2px 6px #000;min-height:1.4em}
+#big{position:absolute;left:0;right:0;bottom:9%;display:grid;place-items:center;font:700 clamp(28px,6vw,72px) Fredoka;background:linear-gradient(transparent,rgba(5,7,15,.75) 35%);padding:1% 0;color:var(--gold);text-shadow:0 6px 0 #6b3bff,0 0 40px rgba(255,210,63,.6);opacity:0;transform:scale(.3);transition:all .6s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
+#big.on{opacity:1;transform:none}
+.conf{position:absolute;top:-20px;width:12px;height:18px;border-radius:3px;animation:fall 2.6s linear forwards}
+@keyframes fall{to{transform:translateY(120vh) rotate(720deg)}}
+/* personnage */
+#prof{transition:transform 1.4s cubic-bezier(.5,0,.3,1)}
+#prof.out{transform:translateX(-520px)}
+#armR{transform-origin:438px 392px;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+#armR.wave{animation:wave .5s ease-in-out 4 alternate}
+@keyframes wave{from{transform:rotate(-150deg)}to{transform:rotate(-115deg)}}
+#armR.point{transform:rotate(-80deg)}
+#armR.up{transform:rotate(-140deg)}
+#armL{transform-origin:262px 392px;transition:transform .5s cubic-bezier(.3,1.5,.5,1)}
+#armL.face{transform:rotate(152deg)}
+#brows{transition:transform .25s}
+#brows.up{transform:translateY(-9px)}
+#body{animation:breathe 3.4s ease-in-out infinite;transform-origin:350px 520px}
+@keyframes breathe{50%{transform:scaleY(1.012)}}
+#head{transform-origin:350px 330px;transition:transform .4s}
+#head.tilt{transform:rotate(-6deg)}
+.lid{transform-box:fill-box;transform-origin:center;animation:blink 4.2s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(0)}96%{transform:scaleY(1)}}
+.flick{animation:flick 3s infinite}
+@keyframes flick{0%,100%{opacity:.9}48%{opacity:.75}50%{opacity:1}}
+/* défi */
+#game{position:absolute;inset:0;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3%}
+#game.on{display:flex}
+#game .words{display:grid;grid-template-columns:repeat(3,auto);gap:1.2vw 5vw;font:400 clamp(16px,3vw,36px) Georgia,serif;margin:2% 0}
+#game .words div:last-child{grid-column:1/4}
+#game .count{font:700 clamp(20px,3vw,34px) Fredoka;color:var(--gold)}
+#game h2{font:700 clamp(20px,3.4vw,40px) Fredoka;margin:0}
+.note{max-width:1100px;font-size:13px;opacity:.65;text-align:center;padding:0 12px 16px}
+</style>
+</head>
+<body>
+<div class="ctrl">
+  <button class="btn" id="play">▶️ Lancer l’intro</button>
+  <button class="btn sec" id="stop">⏹️ Stop</button>
+  <button class="btn sec" id="defi">🧠 Défi d’ouverture (10 mots)</button>
+  <button class="btn sec" id="fs">⛶ Plein écran</button>
+  <span style="display:none"><select id="src"><option value="rec" selected></option><option value="tts"></option></select><select id="voiceSel"></select><select id="tone"><option value="2" selected></option></select><input type="checkbox" id="subs"><input type="file" id="rec"></span>
+</div>
+
+<div class="screen" id="screen">
+  <div id="scene">
+  <svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16244f"/><stop offset="1" stop-color="#0b1330"/></linearGradient>
+      <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2a55"/><stop offset="1" stop-color="#0a1128"/></linearGradient>
+      <radialGradient id="lampGlow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#dff1ff" stop-opacity=".55"/><stop offset="1" stop-color="#dff1ff" stop-opacity="0"/></radialGradient>
+      <linearGradient id="monG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5fb7ff"/><stop offset="1" stop-color="#1d5fd1"/></linearGradient>
+      <linearGradient id="coat" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e8eef9"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#d4ddef"/></linearGradient>
+    </defs>
+    <rect width="960" height="540" fill="url(#wall)"/>
+    <!-- mur d'écrans en mosaïque -->
+    <g opacity=".55">
+      <rect x="30" y="40" width="250" height="170" rx="6" fill="#0f1d44"/>
+      <g fill="#3f7fe0">
+        <rect x="42" y="52" width="38" height="28" opacity=".7"/><rect x="84" y="52" width="38" height="28" opacity=".35"/><rect x="126" y="52" width="38" height="28" opacity=".8"/><rect x="168" y="52" width="38" height="28" opacity=".4"/><rect x="210" y="52" width="58" height="28" opacity=".6"/>
+        <rect x="42" y="84" width="58" height="34" opacity=".45"/><rect x="104" y="84" width="38" height="34" opacity=".85"/><rect x="146" y="84" width="58" height="34" opacity=".3"/><rect x="208" y="84" width="60" height="34" opacity=".7"/>
+        <rect x="42" y="122" width="38" height="34" opacity=".75"/><rect x="84" y="122" width="78" height="34" opacity=".4"/><rect x="166" y="122" width="38" height="34" opacity=".9"/><rect x="208" y="122" width="60" height="34" opacity=".5"/>
+        <rect x="42" y="160" width="98" height="38" opacity=".35"/><rect x="144" y="160" width="58" height="38" opacity=".65"/><rect x="206" y="160" width="62" height="38" opacity=".8"/>
+      </g>
+      <g stroke="#bfe0ff" stroke-width="3" fill="none" opacity=".8"><circle cx="70" cy="70" r="14"/><path d="M60 70 h20 M70 60 v20"/></g>
+    </g>
+    <!-- grand écran du labo -->
+    <rect x="548" y="70" width="350" height="230" rx="12" fill="#0a1534" stroke="#2d4a8a" stroke-width="6"/>
+    <rect class="flick" x="560" y="82" width="326" height="206" rx="6" fill="url(#monG)" opacity=".9"/>
+    <rect x="560" y="82" width="326" height="206" rx="6" fill="#0b1f4d" opacity=".55"/>
+    <text x="574" y="104" font-family="Nunito" font-weight="800" font-size="14" fill="#bfe0ff">LABO DES SCIENCES COGNITIVES</text>
+    <rect x="710" y="300" width="26" height="40" fill="#1b2b55"/>
+    <!-- sol + bureau -->
+    <rect y="430" width="960" height="110" fill="url(#floor)"/>
+    <g stroke="#22356b" stroke-width="2" opacity=".6"><path d="M0 460 H960 M0 500 H960 M120 430 L40 540 M320 430 L290 540 M520 430 L540 540 M720 430 L790 540"/></g>
+    <!-- lampe -->
+    <circle cx="660" cy="360" r="120" fill="url(#lampGlow)"/>
+    <path d="M610 455 L640 380 L690 345" stroke="#9fb3d8" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="700" cy="342" rx="34" ry="12" fill="#e9f4ff" transform="rotate(-15 700 342)"/>
+    <!-- microscope -->
+    <g transform="translate(780 360)"><rect x="0" y="80" width="70" height="14" rx="4" fill="#cfd8ea"/><path d="M30 80 V30 l20 -25" stroke="#cfd8ea" stroke-width="12" stroke-linecap="round" fill="none"/><rect x="40" y="-10" width="16" height="30" rx="4" fill="#9fb3d8" transform="rotate(40 48 5)"/><rect x="10" y="50" width="50" height="8" rx="3" fill="#9fb3d8"/></g>
+    <!-- fioles -->
+    <g transform="translate(150 380)"><path d="M0 0 h18 v20 l14 30 h-46 l14 -30 z" fill="#3d8bff" opacity=".85"/><path d="M40 10 h16 v18 l12 22 h-40 l12 -22 z" fill="#ffd23f" opacity=".85"/><path d="M80 -6 h14 v26 l14 30 h-42 l14 -30 z" fill="#22b573" opacity=".85"/></g>
+    <rect x="80" y="440" width="820" height="18" rx="6" fill="#2a3a6b"/>
+    <rect x="80" y="456" width="820" height="12" fill="#1b2750"/>
+
+    <!-- PERSONNAGE : Professeur Synapse (dessin original) -->
+    <g id="prof">
+     <g id="body">
+      <!-- bras gauche (au repos, peut venir au visage) -->
+      <g id="armL"><path d="M262 392 C238 430 236 470 246 500" stroke="url(#coat)" stroke-width="40" fill="none" stroke-linecap="round"/><circle cx="246" cy="505" r="17" fill="#f2c9a8"/></g>
+      <!-- buste / blouse -->
+      <path d="M250 400 C252 370 290 350 350 348 C410 350 448 370 450 400 L462 540 H238 Z" fill="url(#coat)"/>
+      <path d="M322 352 L350 420 L378 352 Z" fill="#8fd0c9"/>
+      <path d="M318 350 L350 440 L292 396 Z" fill="#f4f7fc" stroke="#c7d2e6" stroke-width="2"/>
+      <path d="M382 350 L350 440 L408 396 Z" fill="#f4f7fc" stroke="#c7d2e6" stroke-width="2"/>
+      <!-- nœud papillon violet -->
+      <path d="M350 362 L328 352 L328 374 Z M350 362 L372 352 L372 374 Z" fill="#6b3bff"/><circle cx="350" cy="363" r="6" fill="#4b25c9"/>
+      <!-- badge -->
+      <rect x="390" y="430" width="44" height="22" rx="4" fill="#ffd23f"/><text x="412" y="446" text-anchor="middle" font-family="Nunito" font-weight="900" font-size="11" fill="#231f3d">Pr S.</text>
+      <!-- stylos poche -->
+      <rect x="396" y="404" width="5" height="22" fill="#e5484d"/><rect x="404" y="402" width="5" height="24" fill="#3d8bff"/>
+      <!-- tête -->
+      <g id="head">
+        <rect x="334" y="318" width="32" height="34" fill="#e8b994"/>
+        <ellipse cx="350" cy="262" rx="66" ry="78" fill="#f2c9a8"/>
+        <ellipse cx="284" cy="270" rx="12" ry="18" fill="#e8b994"/><ellipse cx="416" cy="270" rx="12" ry="18" fill="#e8b994"/>
+        <!-- cheveux gris en touffes sur les côtés, crâne dégarni -->
+        <path d="M282 250 C262 220 270 186 296 180 C284 200 292 222 300 236 Z" fill="#c9cfdc"/>
+        <path d="M418 250 C438 220 430 186 404 180 C416 200 408 222 400 236 Z" fill="#c9cfdc"/>
+        <path d="M300 196 C312 176 330 170 342 176 C330 182 318 192 312 204 Z" fill="#c9cfdc"/>
+        <path d="M400 196 C388 176 370 170 358 176 C370 182 382 192 388 204 Z" fill="#c9cfdc"/>
+        <path d="M340 186 q10 -22 22 0" stroke="#c9cfdc" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <!-- sourcils -->
+        <g id="brows" fill="#9aa3b5"><path d="M304 226 q20 -14 40 -2 l-2 7 q-18 -8 -36 2 z"/><path d="M396 226 q-20 -14 -40 -2 l2 7 q18 -8 36 2 z"/></g>
+        <!-- yeux + lunettes rondes -->
+        <ellipse cx="324" cy="256" rx="11" ry="12" fill="#fff"/><ellipse cx="376" cy="256" rx="11" ry="12" fill="#fff"/>
+        <circle id="pL" cx="325" cy="258" r="6" fill="#2a2345"/><circle id="pR" cx="377" cy="258" r="6" fill="#2a2345"/>
+        <ellipse class="lid" cx="324" cy="256" rx="12" ry="13" fill="#f2c9a8"/><ellipse class="lid" cx="376" cy="256" rx="12" ry="13" fill="#f2c9a8"/>
+        <g fill="none" stroke="#3a2f6b" stroke-width="5"><circle cx="324" cy="256" r="22"/><circle cx="376" cy="256" r="22"/><path d="M346 254 q4 -6 8 0"/><path d="M302 252 L286 246 M398 252 L414 246"/></g>
+        <!-- nez, joues -->
+        <path d="M350 262 q-10 22 2 28" stroke="#d99c78" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <circle cx="304" cy="294" r="11" fill="#ff8fa3" opacity=".35"/><circle cx="396" cy="294" r="11" fill="#ff8fa3" opacity=".35"/>
+        <!-- bouche -->
+        <ellipse id="mouth" cx="350" cy="308" rx="18" ry="4" fill="#7a2c3c"/>
+        <path id="smile" d="M332 304 q18 14 36 0" stroke="#7a2c3c" stroke-width="4" fill="none" stroke-linecap="round" opacity="0"/>
+        <!-- petite barbiche grise -->
+        <path d="M338 326 q12 18 24 0 q-12 6 -24 0z" fill="#c9cfdc"/>
+      </g>
+      <!-- bras droit (geste) -->
+      <g id="armR"><path d="M438 392 C462 430 464 470 454 500" stroke="url(#coat)" stroke-width="40" fill="none" stroke-linecap="round"/><circle cx="454" cy="505" r="17" fill="#f2c9a8"/></g>
+     </g>
+    </g>
+  </svg>
+  <div id="mon"></div>
+  </div>
+  <div id="title"><b>Professeur Synapse</b><span>Laboratoire des sciences cognitives · Lycée Jeanne d’Albret</span></div>
+  <div id="big">À VOUS DE JOUER !</div>
+  <div id="sub"></div>
+  <div id="game">
+    <h2 id="gTitle">Mémorisez ces 10 mots…</h2>
+    <div class="words" id="gWords"></div>
+    <div class="count" id="gCount"></div>
+  </div>
+</div>
+
+
+<script>
+const TEXT="Bonjour à toutes et à tous, et merci d’être venus ! Je suis le Professeur Synapse, du laboratoire des sciences cognitives du lycée Jeanne d'Albret. Chaque soir, vous voyez vos enfants réviser… mais savez-vous comment leur cerveau apprend vraiment ? Relire sa leçon trois fois, surligner, tout réviser la veille du contrôle : ces habitudes rassurent, mais elles sont souvent trompeuses. Aujourd'hui, c’est vous qui allez jouer ! Par équipes, vous allez relever six missions et découvrir les quatre piliers de l’apprentissage. Pas besoin d’être un expert, ni de connaître le programme : vous repartirez avec des gestes simples pour aider votre enfant à la maison. Notez les idées clés sur votre fiche bilan. Vous avez une heure. À vous de jouer !";
+const $=id=>document.getElementById(id);
+const scene=$("scene"),mon=$("mon"),armR=$("armR"),armL=$("armL"),brows=$("brows"),head=$("head");
+function camera(c){scene.className=c||"";}
+function setMon(html,cls){mon.className=cls||"";mon.innerHTML=html||"";}
+function addChip(t){const d=document.createElement("div");d.className="chip";d.innerHTML=t+'<span class="x">✖</span>';mon.appendChild(d);}
+function arm(c){/* bras immobiles */}
+const CUES=[
+ ["Bonjour",()=>{camera("mid");smile(1);}],
+ ["Je suis",()=>{$("title").classList.add("on");smile(0);}],
+ ["Chaque soir",()=>{$("title").classList.remove("on");camera("close");arm("");}],
+ ["comment leur cerveau",()=>{camera("");brows.classList.add("up");head.classList.add("tilt");setMon('<div class="chip" style="font-size:clamp(30px,5vw,60px)">🧠 ?</div>');}],
+ ["Relire",()=>{brows.classList.remove("up");head.classList.remove("tilt");camera("");setMon("");addChip("📖 Relire ×3");arm("up");}],
+ ["surligner",()=>addChip("🖍️ Surligner")],
+ ["tout réviser",()=>addChip("📅 Tout réviser la veille")],
+ ["rassurent",()=>{arm("");}],
+ ["trompeuses",()=>{document.querySelectorAll("#mon .chip").forEach((c,i)=>setTimeout(()=>c.classList.add("no"),i*220));brows.classList.add("up");head.classList.add("tilt");}],
+ ["Aujourd'hui",()=>{brows.classList.remove("up");head.classList.remove("tilt");camera("");arm("point");smile(1);}],
+ ["six missions",()=>{arm("");smile(0);setMon(["🃏","📉","🔤","🎯","💬","👓"].map(e=>'<div class="chip" style="font-size:clamp(18px,3vw,36px)">'+e+'</div>').join(""));}],
+ ["quatre piliers",()=>{setMon([["🎯 Attention","var(--att)"],["🙋 Engagement","var(--eng)"],["💬 Retour d’info","var(--fb)"],["🌙 Consolidation","var(--cons)"]].map(([t,c])=>'<div class="pil" style="background:'+c+'">'+t+'</div>').join(""),"pillars");
+   setTimeout(()=>document.querySelectorAll(".pil").forEach((p,i)=>setTimeout(()=>p.style.height="85%",i*200)),50);arm("up");}],
+ ["Pas besoin",()=>{camera("close");arm("");smile(1);}],
+ ["fiche bilan",()=>{smile(0);camera("");setMon('<div class="chip" style="font-size:clamp(18px,3vw,34px)">📝 Fiche bilan</div>');}],
+ ["une heure",()=>setMon('<div class="chip" style="font:700 clamp(28px,5vw,60px) Fredoka;color:#ffd23f">⏱️ 60:00</div>')],
+ ["À vous de jouer",()=>{camera("");arm("wave");smile(1);$("big").classList.add("on");confetti();}]
+];
+let cueIdx=[];function prepCues(){cueIdx=CUES.map(([k,f])=>({i:TEXT.indexOf(k),f,done:false})).filter(c=>c.i>=0);}
+function fireUpTo(ci){cueIdx.forEach(c=>{if(!c.done&&c.i<=ci){c.done=true;try{c.f();}catch(e){}}});
+  if($("subs").checked){const st=TEXT.lastIndexOf(" ",Math.max(0,ci-1));const a=Math.max(TEXT.lastIndexOf(".",ci-1),TEXT.lastIndexOf("!",ci-1),TEXT.lastIndexOf("?",ci-1),TEXT.lastIndexOf(":",ci-1),-1)+1;
+    let b=TEXT.slice(ci).search(/[.!?:]/);b=b<0?TEXT.length:ci+b+1;$("sub").textContent=TEXT.slice(a,b).trim();}else $("sub").textContent="";}
+let mouthT=null;function talk(on){clearInterval(mouthT);const m=$("mouth");if(!on){m.setAttribute("ry",4);return;}mouthT=setInterval(()=>m.setAttribute("ry",(3+Math.random()*13).toFixed(1)),105);}
+function smile(on){$("smile").setAttribute("opacity",on?1:0);}
+function confetti(){const cols=["#ffd23f","#ff4f8b","#3d8bff","#22b573","#9b5cff","#ff8a3d"];for(let i=0;i<70;i++){const c=document.createElement("div");c.className="conf";c.style.left=Math.random()*100+"%";c.style.background=cols[i%6];c.style.animationDelay=(Math.random()*.8)+"s";c.style.animationDuration=(2+Math.random()*1.5)+"s";$("screen").appendChild(c);setTimeout(()=>c.remove(),4000);}}
+function resetScene(){camera("");setMon("");arm("");armL.setAttribute("class","");brows.classList.remove("up");head.classList.remove("tilt");smile(0);$("title").classList.remove("on");$("big").classList.remove("on");$("sub").textContent="";$("game").classList.remove("on");}
+/* voix */
+let voices=[];function loadVoices(){try{voices=speechSynthesis.getVoices().filter(v=>/^fr/i.test(v.lang));}catch(e){voices=[];}
+  const s=$("voiceSel");s.innerHTML=voices.length?"":"<option>(aucune voix française)</option>";voices.forEach((v,i)=>{const o=document.createElement("option");o.value=i;o.textContent=v.name.replace(/Microsoft |Google /,"")+" ("+v.lang+")";s.appendChild(o);});
+  const pref=[/natural|online|neural/i,/google/i,/denise|vivienne|eloise|remy|henri|thomas|amelie|audrey|aurelie/i];
+  for(const r of pref){const p=voices.findIndex(v=>r.test(v.name));if(p>=0){s.value=p;break;}}}
+try{loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}catch(e){}
+let est=null;function stopAll(){speakingRun++;try{speechSynthesis.cancel();}catch(e){}try{if(audio)audio.pause();}catch(e){}clearInterval(est);talk(false);clearInterval(gT);}
+function estimate(rate){let ci=0;clearInterval(est);est=setInterval(()=>{ci+=rate;fireUpTo(Math.floor(ci));if(ci>=TEXT.length){clearInterval(est);talk(false);}},100);}
+$("play").onclick=()=>{stopAll();resetScene();prepCues();
+  $("prof").classList.add("out");setTimeout(()=>{$("prof").classList.remove("out");},50);
+  setTimeout(()=>{
+    if(recURL&&useRec){playRec();return;}
+    if(!("speechSynthesis" in window)||!voices.length){talk(true);estimate(1.5);return;}
+    speakDynamic();
+  },1500);
+};
+$("stop").onclick=()=>{stopAll();};
+
+/* ---- voix dynamique : phrase par phrase, intonation variée ---- */
+const TONES={1:{r:1.0,p:1.0,ex:.08,q:.08,pause:260},2:{r:1.1,p:1.08,ex:.18,q:.14,pause:170},3:{r:1.2,p:1.15,ex:.28,q:.2,pause:110}};
+function sentences(){const out=[];const re=/[^.!?…:]+[.!?…:]*\s*/g;let m;while((m=re.exec(TEXT))){if(m[0].trim())out.push({s:m[0],o:m.index});}return out;}
+let speakingRun=0;
+function speakDynamic(){const run=++speakingRun;const T=TONES[$("tone").value];const list=sentences();let k=0;talk(true);
+  const v=voices[+$("voiceSel").value];
+  const next=()=>{if(run!==speakingRun)return;if(k>=list.length){talk(false);fireUpTo(TEXT.length);return;}
+    const {s,o}=list[k++];const u=new SpeechSynthesisUtterance(s.trim());u.lang="fr-FR";if(v)u.voice=v;
+    const end=s.trim().slice(-1);u.rate=T.r+(end==="!"?.04:0)+(/:$/.test(s.trim())?.05:0);
+    u.pitch=Math.min(2,T.p+(end==="!"?T.ex:0)+(end==="?"?T.q:0)+(k===1?.1:0));
+    let got=false,est2=null;fireUpTo(o);
+    u.onboundary=e=>{got=true;fireUpTo(o+e.charIndex);};
+    u.onstart=()=>{talk(true);setTimeout(()=>{if(!got){let ci=0;est2=setInterval(()=>{ci+=1.6*u.rate;fireUpTo(o+Math.min(ci,s.length));},100);}},500);};
+    u.onend=()=>{clearInterval(est2);fireUpTo(o+s.length);talk(false);setTimeout(()=>{talk(true);next();},T.pause);};
+    u.onerror=()=>{clearInterval(est2);next();};
+    speechSynthesis.speak(u);};
+  next();}
+/* ---- enregistrement personnel ---- */
+let recURL="intro-parents.mp3",audio=null,ANCH=null;
+/* passages parlés détectés dans l'enregistrement (début, fin en secondes) : le texte avance au rythme de la parole, il se fige pendant les pauses */
+const SEGS=[[1.99, 3.18], [3.77, 4.48], [5.36, 6.49], [6.99, 8.98], [10.12, 10.56], [10.94, 11.94], [12.6, 12.81], [13.52, 14.64], [15.22, 16.24], [17.09, 20.17], [20.68, 21.47], [22.03, 22.91], [23.98, 25.09], [25.92, 26.33], [26.75, 29.9], [31.1, 32.17], [32.54, 33.38], [34.1, 35.69], [36.11, 36.97], [38.11, 39.85], [40.61, 41.12], [41.69, 42.01]];
+const SPEECH=SEGS.reduce((s,[a,b])=>s+b-a,0);
+function charAt(time){let acc=0;for(const [a,b] of SEGS){if(time<=a)break;acc+=Math.min(time,b)-a;}return Math.floor(Math.min(1,acc/SPEECH)*TEXT.length);}
+let useRec=true;
+$("rec").onchange=e=>{const f=e.target.files[0];if(!f)return;recURL=URL.createObjectURL(f);useRec=true;$("src").value="rec";
+  };
+$("src").onchange=()=>{useRec=$("src").value==="rec";};
+const ENV="00000000000000000000000000000000000000000000000000000000001245677533687410025751002576543356765310111001122210002555566411223556631112321233100000000000000000013543236642223311332235532332233333210000000000111367766657752368866433445532135544210024542223443113554554334421000000000000000000000000000001246532232368865210000000014446887886665467643477554432122200000000000000001232268852000000000000000000135543222478778863223321245788888775200000000000000135788999864322345542358875211222100000000000000000000001468766632234554433333322247742223688755544445677766675212356678766656788886566545312576422577420000000000002576787543200256553355433321123221000000133355433324433332212431010132100122211221000000000000000002588667986666410013456545641026755432111210000000000000000025654431002575200000000013566898875467645763233347888643333344310000025765774124566776642014762113420145312686566752125762000000000000000000000000000000000279877897778763122456641122113555310000000014778863589973354212553334432100000000000000000146678757863100246776565421355434542001333333345531100000000136899878867863235422247875443321100000000000000000000000000136532465543233224420012466522223332122331013442113444310000000000000000000124567656777665543211100000000000267666534553100000000000000000000000000000000000000000000000000000000000000000000000000";/* volume de la voix, 30 images/s, 0-9 */
+function mouthAt(time){const i=Math.floor(time*30);const v=i<ENV.length?ENV.charCodeAt(i)-48:0;return v;}
+function playRec(){audio=new Audio(recURL);talk(true);let raf;const loop=()=>{if(!audio||audio.paused)return;
+    const ci=recURL==="intro-parents.mp3"?charAt(audio.currentTime):Math.floor(audio.currentTime/(audio.duration||1)*TEXT.length);fireUpTo(ci);if(recURL==="intro-parents.mp3"){const v=mouthAt(audio.currentTime);const m=$("mouth");m.setAttribute("ry",(3+v*1.6).toFixed(1));m.setAttribute("rx",(18-v*.5).toFixed(1));}raf=requestAnimationFrame(loop);};
+  audio.onplay=()=>{if(recURL!=="intro-parents.mp3")talk(true);else talk(false);loop();};
+  audio.onended=()=>{talk(false);fireUpTo(TEXT.length);};audio.play().catch(()=>{});}
+/* défi d'ouverture, comme dans la vidéo */
+const WORDS=["Neurone","Cerise","Escalier","Lunettes","Parapluie","Tabouret","Jonquille","Cahier","Boussole","Professeur de piano"];
+let gT=null;
+$("defi").onclick=()=>{stopAll();resetScene();const g=$("game");g.classList.add("on");$("gTitle").textContent="Mémorisez ces 10 mots…";
+  $("gWords").innerHTML=WORDS.map(w=>"<div>"+w+"</div>").join("");let n=30;$("gCount").textContent="⏱️ "+n+" s";
+  try{const u=new SpeechSynthesisUtterance("Avant de commencer, un petit défi. Mémorisez ces dix mots. Vous avez trente secondes.");u.lang="fr-FR";const v=voices[+$("voiceSel").value];if(v)u.voice=v;speechSynthesis.speak(u);}catch(e){}
+  gT=setInterval(()=>{n--;$("gCount").textContent="⏱️ "+n+" s";if(n<=0){clearInterval(gT);$("gWords").innerHTML="";$("gTitle").textContent="Redonnez les 10 mots…";
+    $("gCount").innerHTML='Écrivez-les sur votre fiche, sans regarder !<br><br><button class="btn" onclick="this.parentNode.innerHTML=\''+WORDS.join(" · ").replace(/'/g,"\\'")+'<br><br><small>Combien en avez-vous retrouvé ? Nous y reviendrons à la fin… et dans une semaine.</small>\'">👀 Révéler la liste</button>';
+    try{const u=new SpeechSynthesisUtterance("Temps écoulé ! Redonnez les dix mots.");u.lang="fr-FR";const v=voices[+$("voiceSel").value];if(v)u.voice=v;speechSynthesis.speak(u);}catch(e){}}},1000);};
+/* les yeux suivent la souris */
+document.addEventListener("pointermove",e=>{const r=$("screen").getBoundingClientRect();const dx=Math.max(-4,Math.min(4,(e.clientX-r.left-r.width*.36)/70)),dy=Math.max(-3,Math.min(3,(e.clientY-r.top-r.height*.47)/70));
+  $("pL").setAttribute("cx",325+dx);$("pL").setAttribute("cy",258+dy);$("pR").setAttribute("cx",377+dx);$("pR").setAttribute("cy",258+dy);});
+$("fs").onclick=()=>{const s=$("screen");try{(s.requestFullscreen||s.webkitRequestFullscreen).call(s);}catch(e){}};
+</script>
+</body>
+</html>
