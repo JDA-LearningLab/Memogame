@@ -368,6 +368,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
 .fb-foot{margin-top:2mm;font-size:8pt;color:#6b6690;text-align:center}
 .fb-cor{position:absolute;right:6mm;top:5mm;transform:rotate(8deg);color:#e5484d;border:.6mm solid #e5484d;border-radius:2mm;padding:.5mm 2mm;font-weight:800;font-size:10pt}
 
+#printKit .solprint{font-family:Arial,sans-serif;font-size:10.5pt;line-height:1.35;color:#231f3d}#printKit .solprint h4{margin:8px 0 3px;font-size:11.5pt}#printKit .solprint ul{margin:0 0 4px;padding-left:18px}#printKit button{display:none}
 </style>
 </head>
 <body>
@@ -482,6 +483,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
       <div class="msg ko" id="animMsg"></div>
     </div>
     <div id="animIn" style="display:none;margin-top:14px">
+      <div class="fiche" style="margin:0 0 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center"><b>🖨️ Impressions rapides :</b><button class="btn sec" id="qpSol">✅ Solutions (professeur)</button><button class="btn sec" id="qpFb">📝 Fiche bilan à compléter</button><button class="btn sec" id="qpFbc">📝 Corrigé de la fiche bilan</button><button class="btn sec" id="qpFm">📄 Fiche mémo</button></div>
       <div class="tabs" id="animTabs">
         <button data-t="t1" class="sel">⏱️ Déroulé</button>
         <button data-t="t2">✅ Solutions</button>
@@ -1494,6 +1496,12 @@ $("#qrPrint").onclick=()=>{document.querySelector("#printKit").innerHTML=documen
 $("#qrnPrint").onclick=()=>{document.querySelector("#printKit").innerHTML=document.querySelector("#qrNomat").innerHTML;try{window.print();}catch(e){}};
 $("#fbPrint").onclick=()=>{document.querySelector("#printKit").innerHTML=document.querySelector("#fbPrev").innerHTML;try{window.print();}catch(e){}};
 $("#fbcPrint").onclick=()=>{document.querySelector("#printKit").innerHTML=document.querySelector("#fbCor").innerHTML;try{window.print();}catch(e){}};
+function _pk(h){document.querySelector("#printKit").innerHTML=h;try{window.print();}catch(e){}}
+$("#qpSol").onclick=()=>_pk('<div class="solprint"><h3>Mémogame · Solutions (professeur)</h3>'+document.querySelector("#t2").innerHTML+'</div>');
+$("#qpFb").onclick=()=>_pk(document.querySelector("#fbPrev").innerHTML);
+$("#qpFbc").onclick=()=>_pk(document.querySelector("#fbCor").innerHTML);
+$("#qpFm").onclick=()=>_pk(document.querySelector(".fmprev").innerHTML);
+document.querySelector("#t2").insertAdjacentHTML("afterbegin",'<button class="btn" onclick="document.querySelector(&quot;#qpSol&quot;).click()">🖨️ Imprimer les solutions</button>');
 refreshNomat();
 buildDeck();renderHome();
 })();
