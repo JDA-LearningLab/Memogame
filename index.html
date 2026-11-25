@@ -695,7 +695,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
       <!-- bras droit (geste) -->
       <g id="ps_armR"><path d="M438 392 C462 430 464 470 454 500" stroke="url(#ps_coat)" stroke-width="40" fill="none" stroke-linecap="round"/><circle cx="454" cy="505" r="17" fill="#f2c9a8"/></g>
      </g>
-    </g></svg></div><div class="bub"><h3>🔬 Message du Professeur Synapse</h3><p style="margin:0 0 8px">Bravo, vous avez trouvé ma cachette ! Voici mon indice pour ouvrir le cadenas :</p><p style="margin:0 0 8px">👉 <b>Seules les cartes VRAIES comptent.</b> Retournez au jeu et lisez les chiffres apparus sur ces cartes, <b>dans l’ordre des numéros, de 1 à 10</b>.</p><p style="margin:0;font-size:16px;color:#6b6690">Petit plus : ce code est une année… celle où un chercheur a mesuré la vitesse de l’oubli !</p><button class="btn" style="margin-top:12px" onclick="document.getElementById('synapseHint').classList.remove('on');history.replaceState(null,'',location.pathname)">↩️ Retour au jeu</button></div></div></div><div id="alarm5"><div style="font-size:60px">🚨</div><div class="t">ALERTE : 10 MINUTES !</div><div class="s">Le Professeur Synapse lance l’alerte : dans 10 minutes, les découvertes du labo seront effacées ! Terminez votre mission et préparez la lettre de votre équipe.</div><button class="btn" id="alarmOk" style="background:#ffd23f;color:#231f3d">💪 On fonce !</button></div><div id="dash"><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><div style="font-size:40px">🧠</div><div><h1>Tableau de bord du labo</h1><div style="opacity:.75;font-size:14px">Quand une équipe annonce une mission réussie, cliquez sur sa case. À projeter au tableau.</div></div><div class="dt" id="dTime">60:00</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center"><label style="font-weight:800">Équipes : <select id="dN" style="font:700 14px Nunito;border-radius:8px;padding:4px"><option>4</option><option>5</option><option>6</option><option selected>7</option></select></label><button class="db" id="dStart">▶️ Lancer le chrono</button><button class="db" id="dPause">⏸️ Pause</button><button class="db" id="dReset">↺ Remettre à zéro</button><button class="db" id="dClose" style="background:#5b3fd6">✖ Fermer</button></div><div class="grid"><div class="pan"><div id="dTeams"></div></div><div style="display:flex;flex-direction:column;gap:12px"><div class="pan" style="text-align:center"><b style="font:700 17px Fredoka">🔐 Le coffre commun</b><div id="dLock" style="font-size:46px">🔒</div><div class="slots" id="dSlots"></div></div><div class="pan"><b style="font:700 17px Fredoka">📡 Fil du labo</b><div class="feed" id="dFeed"></div></div></div></div></div><div id="printKit"></div>
+    </g></svg></div><div class="bub"><h3>🔬 Message du Professeur Synapse</h3><p style="margin:0 0 8px">Bravo, vous avez trouvé ma cachette ! Voici mon indice pour ouvrir le cadenas :</p><p style="margin:0 0 8px">👉 <b>Seules les cartes VRAIES comptent.</b> Retournez au jeu et lisez les chiffres apparus sur ces cartes, <b>dans l’ordre des numéros, de 1 à 10</b>.</p><p style="margin:0;font-size:16px;color:#6b6690">Petit plus : ce code est une année… celle où un chercheur a mesuré la vitesse de l’oubli !</p><button class="btn" style="margin-top:12px" onclick="document.getElementById('synapseHint').classList.remove('on');history.replaceState(null,'',location.pathname)">↩️ Retour au jeu</button></div></div></div><div id="alarm5"><div style="font-size:60px">🚨</div><div class="t">ALERTE : 10 MINUTES !</div><div class="s">Le Professeur Synapse lance l’alerte : dans 10 minutes, les découvertes du labo seront effacées ! Terminez votre mission et préparez la lettre de votre équipe.</div><button class="btn" id="alarmOk" style="background:#ffd23f;color:#231f3d">💪 On fonce !</button></div><div id="dash"><div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap"><div style="font-size:40px">🧠</div><div><h1>Tableau de bord du labo</h1><div style="opacity:.75;font-size:14px">Quand une équipe annonce une mission réussie, cliquez sur sa case. À projeter au tableau.</div></div><div class="dt" id="dTime">60:00</div></div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center"><label style="font-weight:800">Équipes : <select id="dN" style="font:700 14px Nunito;border-radius:8px;padding:4px"><option>4</option><option>5</option><option>6</option><option selected>7</option></select></label><button class="db" id="dStart">▶️ Lancer le chrono</button><button class="db" id="dPause">⏸️ Pause</button><button class="db" id="dReset">↺ Remettre à zéro</button><button class="db" id="dClose" style="background:#5b3fd6">✖ Fermer</button><span style="display:inline-flex;gap:6px;align-items:center;margin-left:auto;background:rgba(255,255,255,.06);border-radius:12px;padding:4px 8px"><button class="db" id="dMus">🔇 Musique</button><select id="dStyle" style="font:700 14px Nunito;border-radius:8px;padding:5px"><option value="enquete">🕵️ Enquête mystère</option><option value="lofi">☕ Lofi studieux</option><option value="labo">🧪 Labo électro</option><option value="arcade">👾 Arcade 8-bit</option><option value="piano">🎹 Documentaire piano</option></select><input type="range" id="dVol" min="0" max="100" value="55" style="width:90px;accent-color:#9b5cff" title="Volume"></span></div><div class="grid"><div class="pan"><div id="dTeams"></div></div><div style="display:flex;flex-direction:column;gap:12px"><div class="pan" style="text-align:center"><b style="font:700 17px Fredoka">🔐 Le coffre commun</b><div id="dLock" style="font-size:46px">🔒</div><div class="slots" id="dSlots"></div></div><div class="pan"><b style="font:700 17px Fredoka">📡 Fil du labo</b><div class="feed" id="dFeed"></div></div></div></div></div><div id="printKit"></div>
 <div class="modal" id="modal"><div class="card" id="modalCard"></div></div>
 <div id="deck"><div id="stage"></div>
   <div id="deckbar"><button id="dPrev">◀</button><button id="dNum">1/15</button><button id="dNext">▶</button><button id="dFull">⛶</button><button id="dClose">✕</button></div>
@@ -1705,20 +1705,125 @@ function dRender(){const tb=$("#dTeams");tb.innerHTML="";$("#dN").value=String(D
     row.innerHTML='<div class="nm"><i style="background:'+GROUP_COLORS[i]+'"></i>'+GROUP_NAMES[i]+'</div><div class="ms">'+DMN.map((e,k)=>'<button data-t="'+i+'" data-k="'+k+'" class="'+(k<d?"ok":"")+'" style="'+(k<d?"background:"+MISSIONS[k].color:"")+'">'+(k<d?"✓":e)+'</button>').join("")+'</div><div class="lt '+(d>=6?"got":"")+'">'+(d>=6?w[i]:"?")+'</div>';
     tb.appendChild(row);}
   tb.querySelectorAll(".ms button").forEach(b=>b.onclick=()=>{const i=+b.dataset.t,k=+b.dataset.k;const d=D.done[i]||0;
-    if(k===d){D.done[i]=d+1;D.feed.unshift("<b style='color:"+GROUP_COLORS[i]+"'>"+GROUP_NAMES[i]+"</b> a réussi « "+MISSIONS[k].name+" »"+(d+1===6?" · lettre <b>"+w[i]+"</b> !":""));}
+    if(k===d){D.done[i]=d+1;D.feed.unshift("<b style='color:"+GROUP_COLORS[i]+"'>"+GROUP_NAMES[i]+"</b> a réussi « "+MISSIONS[k].name+" »"+(d+1===6?" · lettre <b>"+w[i]+"</b> !":""));if(d+1===6)MUS.win();}
     else if(k===d-1){D.done[i]=d-1;}
     dSave();dRender();const r=$("#dt"+i);if(r){r.classList.add("flash");setTimeout(()=>r.classList.remove("flash"),700);}});
   $("#dSlots").innerHTML=w.split("").map((c,i)=>'<span>'+((D.done[i]||0)>=6?c:"")+'</span>').join("");
   const all=[...Array(D.n).keys()].every(i=>(D.done[i]||0)>=6);$("#dLock").textContent=all?"🔓":"🔒";
   $("#dFeed").innerHTML=D.feed.slice(0,30).map(x=>"<div>"+x+"</div>").join("");}
 function dTime(){let el2=0;if(D.start){el2=((D.pauseAt||Date.now())-D.start-D.paused);}const left=Math.max(0,DURATION-el2);
-  const m=Math.floor(left/60000),s=Math.floor(left%60000/1000);$("#dTime").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");$("#dTime").classList.toggle("warn",D.start&&left<5*60000);}
+  const m=Math.floor(left/60000),s=Math.floor(left%60000/1000);$("#dTime").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");$("#dTime").classList.toggle("warn",D.start&&left<10*60000);const tz=!!(D.start&&left<=10*60000);if(tz!==MUS.isTense()){MUS.setTension(tz);if(tz)MUS.alarm();}}
 function dOpen(){dLoad();dRender();dTime();$("#dash").classList.add("on");clearInterval(dTick);dTick=setInterval(dTime,500);}
-$("#dClose").onclick=()=>{$("#dash").classList.remove("on");clearInterval(dTick);};
+$("#dClose").onclick=()=>{$("#dash").classList.remove("on");clearInterval(dTick);MUS.stop();musBtn();};
 $("#dN").onchange=()=>{D.n=+$("#dN").value;dSave();dRender();};
 $("#dStart").onclick=()=>{if(!D.start){D.start=Date.now();D.paused=0;}else if(D.pauseAt){D.paused+=Date.now()-D.pauseAt;D.pauseAt=null;}dSave();};
 $("#dPause").onclick=()=>{if(D.start&&!D.pauseAt){D.pauseAt=Date.now();dSave();}};
 $("#dReset").onclick=()=>{D={n:D.n,done:{},start:null,paused:0,pauseAt:null,feed:[]};dSave();dRender();dTime();};
+/* musique d'ambiance du tableau de bord (générée, sans fichier) */
+const MUS=(()=>{
+/* ---------- moteur audio ---------- */
+let ctx=null,master,comp,delay,fb,padBus,playing=false,tension=false,timer=null,nextT=0,step=0,chordIdx=0;
+const midi=n=>440*Math.pow(2,(n-69)/12);
+function init(){
+  ctx=new (window.AudioContext||window.webkitAudioContext)();
+  comp=ctx.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=4;
+  master=ctx.createGain();master.gain.value=0;
+  master.connect(comp);comp.connect(ctx.destination);
+  delay=ctx.createDelay(1);delay.delayTime.value=0.38;fb=ctx.createGain();fb.gain.value=0.38;
+  const dl=ctx.createGain();dl.gain.value=0.5;delay.connect(fb);fb.connect(delay);delay.connect(dl);dl.connect(master);
+  padBus=ctx.createBiquadFilter();padBus.type="lowpass";padBus.frequency.value=900;padBus.Q.value=0.7;
+  const lfo=ctx.createOscillator(),lg=ctx.createGain();lfo.frequency.value=0.07;lg.gain.value=380;lfo.connect(lg);lg.connect(padBus.frequency);lfo.start();
+  padBus.connect(master);
+}
+let STYLE="labo";
+const BPM={labo:[88,122],lofi:[78,100],enquete:[72,108],arcade:[120,150],piano:[80,112]};
+const bpm=()=>BPM[STYLE][tension?1:0];
+const sixteenth=()=>60/bpm()/4;
+function env(o,g,t,a,peak,rel,dest){g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(0.0001,t+a+rel);o.connect(g);g.connect(dest||master);o.start(t);o.stop(t+a+rel+0.05);}
+function tone(t,n,type,peak,rel,dest,a){const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=midi(n);env(o,g,t,a||0.008,peak,rel,dest);return o;}
+function pad(t,notes,dur,type,vol){notes.forEach(n=>[-6,0,7].forEach(det=>{
+  const o=ctx.createOscillator(),g=ctx.createGain();o.type=type||"sawtooth";o.frequency.value=midi(n);o.detune.value=det;const v=vol||0.028;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+1.2);g.gain.setValueAtTime(v,t+dur-0.6);g.gain.linearRampToValueAtTime(0,t+dur+0.4);
+  o.connect(g);g.connect(padBus);o.start(t);o.stop(t+dur+0.5);}));}
+function bass(t,n,len,type,cut){const o=ctx.createOscillator(),f=ctx.createBiquadFilter(),g=ctx.createGain();o.type=type||"triangle";o.frequency.value=midi(n);
+  f.type="lowpass";f.frequency.value=cut||(tension?1400:700);g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(tension?0.22:0.16,t+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+len);
+  o.connect(f);f.connect(g);g.connect(master);o.start(t);o.stop(t+len+0.05);}
+function blip(t,list,vol){const n=list[Math.floor(Math.random()*list.length)];const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.value=midi(n);
+  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol||0.07,t+0.005);g.gain.exponentialRampToValueAtTime(0.0001,t+0.35);
+  o.connect(g);g.connect(master);g.connect(delay);o.start(t);o.stop(t+0.4);}
+function noise(t,len,hp,vol,bp){const b=ctx.createBuffer(1,Math.max(1,ctx.sampleRate*len),ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);
+  const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();s.buffer=b;f.type=bp?"bandpass":"highpass";f.frequency.value=hp;g.gain.value=vol;s.connect(f);f.connect(g);g.connect(master);s.start(t);}
+function tick(t,acc){noise(t,0.03,7000,acc?0.09:0.045);}
+function kick(t,v){const o=ctx.createOscillator(),g=ctx.createGain();o.type="sine";o.frequency.setValueAtTime(120,t);o.frequency.exponentialRampToValueAtTime(42,t+0.15);env(o,g,t,0.004,v||0.4,0.22);}
+function heart(t){kick(t,0.38);kick(t+0.16,0.25);}
+// progressions
+const P={labo:{ch:[[57,60,64],[53,57,60],[48,55,60],[55,59,62]],rt:[45,41,48,43]},
+ lofi:{ch:[[62,65,69,72],[67,71,74,77],[60,64,67,71],[57,60,64,67]],rt:[38,43,36,45]},   // Dm9 G7 Cmaj7 Am7
+ enquete:{ch:[[57,60,64],[57,60,65],[56,59,64],[57,60,64]],rt:[33,29,28,33]},
+ arcade:{ch:[[69,72,76],[65,69,72],[67,71,74],[64,67,71]],rt:[45,41,43,40]},
+ piano:{ch:[[60,64,67],[57,60,64],[53,57,60],[55,59,62]],rt:[36,45,41,43]}};
+const PENTA=[69,72,74,76,79,81,84,86,88];
+function bar(t,s,ci){const pr=P[STYLE],ch=pr.ch[ci],root=pr.rt[ci],x=sixteenth();
+  if(STYLE==="labo"){
+    if(s===0)pad(t,ch,x*32);
+    if(s%4===0)bass(t,root,x*(tension?1.6:3));if(s%8===6)bass(t,root+12,x*1.4);if(tension&&s%2===1)bass(t,root,x*0.9);
+    if(tension){tick(t,s%4===2);if(s%8===0)heart(t);}else if(s%4===2)tick(t,false);
+    if(Math.random()<(tension?0.16:0.11))blip(t,PENTA);}
+  if(STYLE==="lofi"){
+    const sw=(s%2===1)?x*0.28:0,tt=t+sw;
+    if(s===0||s===16)ch.forEach((n,k)=>tone(t+k*0.02,n,"triangle",0.06,x*14,padBus,0.02));
+    if(s%16===0||s%16===10)kick(tt,tension?0.42:0.3);
+    if(s%16===8)noise(tt,0.12,1800,0.12,true);
+    if(s%2===0||tension)noise(tt,0.02,8000,s%4===2?0.04:0.02);
+    if(s%16===0)bass(t,root,x*6,"sine",500);if(s%16===10)bass(tt,root+7,x*3,"sine",500);
+    if(Math.random()<0.07)blip(tt,[74,76,79,81,84],0.045);
+    if(s===0)noise(t,x*32,3000,0.006);} // souffle vinyle
+  if(STYLE==="enquete"){
+    if(s===0)pad(t,[root+12,root+19],x*32,"sine",0.06);
+    if(s%4===0)noise(t,0.015,5000,s%8===0?0.08:0.05,true);           // tic-tac d'horloge
+    const arp=[0,3,7,12,7,3,0,-2];if(s%(tension?2:4)===0)tone(t,ch[0]+arp[(s/2|0)%8]-12,"triangle",0.09,0.18,master);
+    if(s===24)tone(t,ch[0]+13,"sine",0.05,1.6,delay,0.4);
+    if(tension&&s%8===0)heart(t);}
+  if(STYLE==="arcade"){
+    const arp=[0,1,2,1];tone(t,ch[arp[s%4]],"square",0.035,x*0.8,master);
+    if(s%4===0)bass(t,root,x*1.8,"square",900);if(s%4===2)bass(t,root+12,x*1.2,"square",900);
+    if(s%8===4)noise(t,0.06,2500,0.08,true);if(s%8===0)kick(t,0.25);
+    if(s%16===0)tone(t,ch[2]+12,"square",0.025,x*3,delay);
+    if(tension&&s%2===1)noise(t,0.015,9000,0.04);}
+  if(STYLE==="piano"){
+    const pat=[0,1,2,1,3,1,2,1],seq=[root+12,...ch,ch[0]+12];
+    if(s%2===0)tone(t,pat[(s/2|0)%8]===3?seq[4]:seq[pat[(s/2|0)%8]+1],"sine",0.09,x*5,master,0.004);
+    if(s===0)pad(t,ch.map(n=>n-12),x*32,"triangle",0.03);
+    if(s%16===0)bass(t,root,x*10,"sine",400);
+    if(tension){if(s%8===0)heart(t);if(s%4===2)tick(t,false);}}
+}
+let curCi=3;
+function schedule(){
+  while(nextT<ctx.currentTime+0.15){const s=step%32;if(s===0)curCi=(curCi+1)%4;bar(nextT,s,curCi);nextT+=sixteenth();step++;}
+}
+let vol=0.55;
+function setVol(v){if(v!=null)vol=v;if(!ctx)return;master.gain.cancelScheduledValues(ctx.currentTime);master.gain.linearRampToValueAtTime(playing?vol*0.9:0,ctx.currentTime+0.6);}
+function start(){if(!ctx)init();ctx.resume();if(playing)return;playing=true;nextT=ctx.currentTime+0.1;step=0;curCi=3;clearInterval(timer);timer=setInterval(schedule,25);setVol();}
+function stop(){playing=false;setVol();setTimeout(()=>{if(!playing)clearInterval(timer);},700);}
+function alarm(){const t=ctx.currentTime+0.05;for(let i=0;i<6;i++){const o=ctx.createOscillator(),g=ctx.createGain();o.type="square";
+  o.frequency.setValueAtTime(880,t+i*0.5);o.frequency.linearRampToValueAtTime(587,t+i*0.5+0.45);g.gain.setValueAtTime(0.0001,t+i*0.5);g.gain.exponentialRampToValueAtTime(0.07,t+i*0.5+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+i*0.5+0.48);o.connect(g);g.connect(comp);o.start(t+i*0.5);o.stop(t+i*0.5+0.5);}}
+function win(){if(!ctx)init();ctx.resume();if(!ctx)init();ctx.resume();const t=ctx.currentTime+0.05;[72,76,79,84,88].forEach((n,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type="triangle";o.frequency.value=midi(n);
+  const tt=t+i*0.11;g.gain.setValueAtTime(0.0001,tt);g.gain.exponentialRampToValueAtTime(0.2,tt+0.01);g.gain.exponentialRampToValueAtTime(0.0001,tt+(i==4?1.2:0.3));
+  o.connect(g);g.connect(comp);g.connect(delay);o.start(tt);o.stop(tt+1.3);});
+  }
+function setStyle(s){STYLE=s;if(playing){step=0;curCi=3;nextT=ctx.currentTime+0.1;}}
+function setTension(v){tension=!!v;}
+return {start,stop,setVol,setStyle,setTension,alarm:()=>{if(ctx&&playing)alarm();},win,isOn:()=>playing,isTense:()=>tension};
+})();
+
+let MS={s:"enquete",v:55};try{MS=Object.assign(MS,JSON.parse(localStorage.getItem(LS+"_mus"))||{});}catch(e){}
+const msSave=()=>{try{localStorage.setItem(LS+"_mus",JSON.stringify(MS));}catch(e){}};
+$("#dStyle").value=MS.s;$("#dVol").value=MS.v;MUS.setStyle(MS.s);MUS.setVol(MS.v/100);
+const musBtn=()=>{$("#dMus").textContent=MUS.isOn()?"🔊 Musique":"🔇 Musique";$("#dMus").style.background=MUS.isOn()?"#ff5470":"";};
+$("#dMus").onclick=()=>{MUS.isOn()?MUS.stop():MUS.start();musBtn();};
+$("#dStyle").onchange=()=>{MS.s=$("#dStyle").value;msSave();MUS.setStyle(MS.s);};
+$("#dVol").oninput=()=>{MS.v=+$("#dVol").value;msSave();MUS.setVol(MS.v/100);};
 $("#dashOpen").onclick=dOpen;
 $("#qrkPrint").onclick=()=>{document.querySelector("#printKit").innerHTML=document.querySelector("#qrkSrc").innerHTML;try{window.print();}catch(e){}};
 
