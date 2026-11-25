@@ -259,6 +259,13 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
 .cipher{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
 .cipher span{font-family:Fredoka,'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;font-size:22px;background:#1d1a3a;color:var(--lab);padding:8px 12px;border-radius:10px}
 
+.jpz{position:relative;width:100%;max-width:760px;margin:10px auto;touch-action:none;user-select:none;-webkit-user-select:none}
+.jpzb{position:absolute;left:0;top:0;width:100%}
+.jpc{position:absolute;cursor:grab;filter:drop-shadow(0 3px 4px rgba(0,0,0,.25))}
+.jpc.drag{cursor:grabbing;z-index:50;filter:drop-shadow(0 8px 10px rgba(0,0,0,.35))}
+.jpc.ok{cursor:default;filter:none;z-index:1}
+.jpc svg{display:block}
+.jpc{pointer-events:none}.jpc:not(.ok) g{pointer-events:auto}
 .cpuz{display:flex;gap:6px;margin:10px 0;background:#fff;padding:8px;border-radius:14px;border:3px solid #ece8ff}
 .cpuz.done{display:block;padding:6px}
 .cpuz svg{display:block;width:100%;height:auto}
@@ -289,6 +296,8 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
 .pzp{flex:1;border:2px dashed;border-right:none;background:#fff}
 .pzp:last-child{border-right:2px dashed}
 .pzb{color:#fff;font-weight:800;font-size:10px;text-align:center;padding:2px 0;letter-spacing:1px}
+.pzs{border:3px solid;border-radius:8px;padding:2mm;background:#fff}
+.pzs svg{display:block;width:100%;height:auto}
 .pzp svg{display:block;width:100%;height:auto;aspect-ratio:100/340}
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
@@ -1212,16 +1221,42 @@ function curveSVG(vx,vw){
   P.forEach(p=>{g+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" fill="#9b5cff"/>';});
   return '<svg viewBox="'+vx+' 0 '+vw+' '+H+'" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">'+g+'</svg>';
 }
+/* puzzle à l'écran : 12 vraies pièces (4 × 3) à glisser */
+const PZ_COLS=4,PZ_ROWS=3;
+function pzEdges(seed){let s=seed;const r=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646;};const H=[],V=[];
+  for(let y=0;y<=PZ_ROWS;y++){H[y]=[];for(let x=0;x<PZ_COLS;x++)H[y][x]=(y==0||y==PZ_ROWS)?0:(r()<.5?1:-1)*(0.85+r()*.3);}
+  for(let x=0;x<=PZ_COLS;x++){V[x]=[];for(let y=0;y<PZ_ROWS;y++)V[x][y]=(x==0||x==PZ_COLS)?0:(r()<.5?1:-1)*(0.85+r()*.3);}
+  return{H,V};}
+const PZ_K=[[0.34,0,0.40,0.04,0.37,0.36],[0.33,0.68,0.38,1,0.5,1],[0.62,1,0.67,0.68,0.63,0.36],[0.60,0.04,0.66,0,1,0]];
+function pzEdge(ax,ay,bx,by,s,T){if(!s)return " L"+bx.toFixed(1)+" "+by.toFixed(1);
+  const dx=bx-ax,dy=by-ay,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,nx=uy,ny=-ux;
+  const P=(u,v)=>(ax+ux*u*L+nx*v*T*s).toFixed(1)+" "+(ay+uy*u*L+ny*v*T*s).toFixed(1);
+  return PZ_K.map(k=>" C"+P(k[0],k[1])+" "+P(k[2],k[3])+" "+P(k[4],k[5])).join("");}
+function pzPath(c,r,E){const cw=EBB.W/PZ_COLS,ch=EBB.H/PZ_ROWS,T=Math.min(cw,ch)*0.25,x0=c*cw,y0=r*ch,x1=x0+cw,y1=y0+ch;
+  return "M"+x0+" "+y0+pzEdge(x0,y0,x1,y0,E.H[r][c],T)+pzEdge(x1,y0,x1,y1,E.V[c+1][r],T)+pzEdge(x1,y1,x0,y1,-E.H[r+1][c],T)+pzEdge(x0,y1,x0,y0,-E.V[c][r],T)+"Z";}
+let _pzid=0;
 function curvePuzzle(box,done){
-  const N=6,PW=EBB.W/N;
-  box.appendChild(el("div",{class:"q",style:"margin-top:10px"},"🧩 Les 6 pièces de la courbe sont mélangées : <b>touchez deux pièces pour les échanger</b>, jusqu’à reconstituer la courbe."));
-  const row=el("div",{class:"cpuz"});box.appendChild(row);
-  let order;do{order=shuffle([...Array(N).keys()]);}while(order.every((p,i)=>p===i));
-  let sel=null;
-  function draw(){row.innerHTML="";order.forEach((p,i)=>{const b=el("button",{class:"cpiece"+(sel===i?" sel":"")+(p===i?" good":"")},curveSVG(p*PW,PW));
-    b.onclick=()=>{if(sel===null){sel=i;draw();return;}if(sel!==i){[order[sel],order[i]]=[order[i],order[sel]];}sel=null;draw();check();};row.appendChild(b);});}
-  function check(){if(order.every((p,i)=>p===i)){row.className="cpuz done";row.innerHTML=curveSVG(0,EBB.W);msg(box,"ok","✅ Courbe reconstituée ! Place à la lecture graphique.");done();}}
-  draw();
+  box.appendChild(el("div",{class:"q",style:"margin-top:10px"},"🧩 La courbe est en 12 morceaux : <b>glissez chaque pièce sur le cadre</b>. Une pièce bien placée s’aimante et se verrouille."));
+  const E=pzEdges(134),cw=EBB.W/PZ_COLS,ch=EBB.H/PZ_ROWS,m=Math.min(cw,ch)*0.3,BX=20,BY=16;
+  const n=PZ_COLS*PZ_ROWS,perRow=6,TS=0.68,vw0=cw+2*m,vh0=ch+2*m,gx=(EBB.W+40-vw0*TS-8)/(perRow-1),gy=vh0*TS*0.86;
+  const SW=EBB.W+40,BH=EBB.H+BY*2,SH=BH+10+gy*(Math.ceil(n/perRow)-1)+vh0*TS+8;
+  const st=el("div",{class:"jpz",style:"aspect-ratio:"+SW+"/"+SH});box.appendChild(st);
+  st.innerHTML='<svg class="jpzb" viewBox="0 0 '+SW+' '+BH+'" style="height:'+(BH/SH*100)+'%"><rect x="'+BX+'" y="'+BY+'" width="'+EBB.W+'" height="'+EBB.H+'" fill="#f7f4ff" stroke="#b9acf0" stroke-width="2" stroke-dasharray="8 5" rx="4"/><text x="'+(BX+EBB.W/2)+'" y="'+(BY+EBB.H/2)+'" text-anchor="middle" fill="#c9bff3" font-size="22" font-weight="700">Reconstituez la courbe ici</text></svg>';
+  const full=curveSVG(0,EBB.W).replace(/^<svg[^>]*>/,"").replace(/<\/svg>$/,"");
+  const order=[];for(let r=0;r<PZ_ROWS;r++)for(let c=0;c<PZ_COLS;c++)order.push([c,r]);
+  const ord=shuffle(order);let placed=0;
+  ord.forEach(([c,r],k)=>{const id="jpz"+(_pzid++),d=pzPath(c,r,E),vw=cw+2*m,vh=ch+2*m;
+    const pc=el("div",{class:"jpc"});pc.innerHTML='<svg viewBox="'+(c*cw-m)+' '+(r*ch-m)+' '+vw+' '+vh+'" width="100%" height="100%"><defs><clipPath id="'+id+'"><path d="'+d+'"/></clipPath></defs><g clip-path="url(#'+id+')">'+full+'</g><path d="'+d+'" fill="none" stroke="#5b3fd6" stroke-width="1.6"/></svg>';
+    const P={tx:BX+c*cw-m,ty:BY+r*ch-m,x:4+(k%perRow)*gx+(Math.random()*6-3),y:BH+10+Math.floor(k/perRow)*gy+(Math.random()*6-3),s:TS,ok:false};
+    const pos=()=>{pc.style.left=(P.x/SW*100)+"%";pc.style.top=(P.y/SH*100)+"%";pc.style.width=(vw*P.s/SW*100)+"%";pc.style.height=(vh*P.s/SH*100)+"%";};pos();st.appendChild(pc);
+    pc.onpointerdown=e=>{if(P.ok)return;e.preventDefault();try{pc.setPointerCapture(e.pointerId);}catch(_){}
+      pc.classList.add("drag");const sc=st.clientWidth/SW;if(P.s<1){const rb=st.getBoundingClientRect(),cx=(e.clientX-rb.left)/sc,cy=(e.clientY-rb.top)/sc;P.x=cx-(cx-P.x)/P.s;P.y=cy-(cy-P.y)/P.s;P.s=1;pos();}
+      const sx=e.clientX,sy=e.clientY,ox=P.x,oy=P.y;
+      pc.onpointermove=ev=>{P.x=Math.max(-m,Math.min(SW-vw+m,ox+(ev.clientX-sx)/sc));P.y=Math.max(-m,Math.min(SH-vh+m,oy+(ev.clientY-sy)/sc));pos();};
+      pc.onpointerup=pc.onpointercancel=()=>{pc.onpointermove=null;pc.classList.remove("drag");
+        if(Math.hypot(P.x-P.tx,P.y-P.ty)<18){P.x=P.tx;P.y=P.ty;P.ok=true;pc.classList.add("ok");pos();placed++;
+          if(placed===n){setTimeout(()=>{st.className="cpuz done";st.removeAttribute("style");st.innerHTML=curveSVG(0,EBB.W);msg(box,"ok","✅ Courbe reconstituée ! Place à la lecture graphique.");done();},450);}}};};
+  });
 }
 const _readCurve=readCurve;
 readCurve=function(box,d,ok){if(!NOMAT)return _readCurve(box,d,ok);curvePuzzle(box,()=>_readCurve(box,d,ok));};
@@ -1255,14 +1290,18 @@ function buildKit(){
 }
 
 /* kit à imprimer : puzzle de la courbe (6 pièces par équipe) */
+/* kit à imprimer : courbe découpée en 8 pièces (coupes obliques) */
+const PZ_OBL=[[150,215],[335,275],[470,430]],PZ_HY=[150,205];
+function obliqueSheet(color){const W=EBB.W,H=EBB.H,cut=d=>'<path d="'+d+'" fill="none" stroke="#222" stroke-width="1.6" stroke-dasharray="6 4"/>';
+  let g='<rect x="1" y="1" width="'+(W-2)+'" height="'+(H-2)+'" fill="none" stroke="#222" stroke-width="1.6" stroke-dasharray="6 4"/>'+cut("M0 "+PZ_HY[0]+" L"+W+" "+PZ_HY[1]);
+  PZ_OBL.forEach(([a,b])=>g+=cut("M"+a+" 0 L"+b+" "+H));
+  const xs=y=>[0,...PZ_OBL.map(([a,b])=>a+(b-a)*y/H)],dot=(x,y)=>'<circle cx="'+x+'" cy="'+y+'" r="5.5" fill="'+color+'" stroke="#fff" stroke-width="1.5"/>';
+  xs(12).forEach(x=>g+=dot(x+14,12));xs(H-30).forEach(x=>g+=dot(x+14,H-30));
+  return curveSVG(0,W).replace('</svg>',g+'</svg>');}
 function buildPuzzleKit(){
   const k=document.querySelector("#printKit");k.innerHTML="";
-  const N=6,PW=EBB.W/N;
-  GROUP_NAMES.forEach((n,i)=>{
-    const c=GROUP_COLORS[i];
-    let pieces="";
-    for(let p=0;p<N;p++){pieces+='<div class="pzp" style="border-color:'+c+'"><div class="pzb" style="background:'+c+'">'+n+'</div>'+curveSVG(p*PW,PW)+'</div>';}
-    k.appendChild(el("div",{class:"pzk"},'<div class="pzh">✂️ Équipe '+n+' · Mission 2 · découper selon les pointillés</div><div class="pzrow">'+pieces+'</div>'));
+  GROUP_NAMES.forEach((n,i)=>{const c=GROUP_COLORS[i];
+    k.appendChild(el("div",{class:"pzk"},'<div class="pzh">✂️ Équipe <b style="color:'+c+'">'+n+'</b> · Mission 2 · découper selon les pointillés (8 pièces)</div><div class="pzs" style="border-color:'+c+'">'+obliqueSheet(c)+'</div>'));
   });
 }
 
