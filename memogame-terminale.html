@@ -1547,7 +1547,7 @@ function _pk(h){document.querySelector("#printKit").innerHTML=h;try{window.print
 $("#qpSol").onclick=()=>_pk('<div class="solprint"><h3>Mémogame · Solutions (professeur)</h3>'+document.querySelector("#t2").innerHTML+'</div>');
 $("#qpFb").onclick=()=>_pk(document.querySelector("#fbPrev").innerHTML);
 $("#qpFbc").onclick=()=>_pk(document.querySelector("#fbCor").innerHTML);
-$("#qpFm").onclick=()=>_pk(document.querySelector(".fmprev").innerHTML);
+$("#qpFm").onclick=()=>_pk(document.querySelector("#t7 .fmprev").innerHTML);
 document.querySelector("#t2").insertAdjacentHTML("afterbegin",'<button class="btn" onclick="document.querySelector(&quot;#qpSol&quot;).click()">🖨️ Imprimer les solutions</button>');
 refreshNomat();
 buildDeck();renderHome();
