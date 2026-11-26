@@ -1,0 +1,215 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mémogame – Débriefing parents</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500..700&family=Nunito:wght@400;700;800&display=swap">
+<style>
+html,body{margin:0;height:100%;background:#0d0a24;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0}
+#stage>section{position:absolute;inset:0;width:1920px;height:1080px;box-sizing:border-box;display:none!important;overflow:hidden}
+#stage>section.on{display:flex!important}
+#stage>section *{box-sizing:border-box}
+#stage aside{display:none}
+#hud{position:fixed;right:14px;bottom:10px;font:700 14px Nunito,Arial,sans-serif;color:#cfc8f2;opacity:.6;display:flex;gap:8px;align-items:center;z-index:5}
+#hud button{background:#2a2458;color:#fff;border:0;border-radius:8px;padding:6px 10px;font:700 14px Nunito,Arial,sans-serif;cursor:pointer}
+#hud:hover{opacity:1}
+#notes{position:fixed;left:0;right:0;bottom:0;background:rgba(13,10,36,.95);color:#fff;font:18px/1.4 Nunito,Arial,sans-serif;padding:14px 20px 46px;display:none;z-index:4}
+#notes.on{display:block}
+body.fs #hud{opacity:0}body.fs #hud:hover{opacity:1}
+:root{--ink:#1B1640;--paper:#FBF8F2;--violet:#6A4BE0;--gold:#FFD23F;--soft:#4A4766;--softd:#CFC8F2;--card:#FFFFFF;--line:#E4DEF5}
+body{font-family:'Nunito',Verdana,sans-serif;color:var(--ink)}
+section{padding:128px;background:var(--paper);display:flex;flex-direction:column;gap:40px}
+section.dark{background:var(--ink);color:var(--paper)}
+section.gold{background:var(--gold);color:var(--ink)}
+h1,h2,h3{font-family:'Fredoka',Trebuchet MS,sans-serif;margin:0}
+h1{font-size:120px;font-weight:700;line-height:1.02}
+h2{font-size:72px;font-weight:600;line-height:1.08}
+h3{font-size:44px;font-weight:600;line-height:1.15}
+p{font-size:32px;line-height:1.4;margin:0}
+.eyebrow{font-family:'Fredoka',Trebuchet MS,sans-serif;font-size:32px;font-weight:600;color:var(--violet);letter-spacing:2px}
+.dark .eyebrow{color:var(--gold)}
+.lead{font-size:44px;line-height:1.3;color:var(--soft)}
+.dark .lead,.dark p{color:var(--softd)}
+.dark .big{color:var(--paper)}
+.muted{color:var(--soft)}
+.small{font-size:24px}
+.row{display:flex;gap:32px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:28px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.card{background:var(--card);border:3px solid var(--line);border-radius:28px;padding:36px;display:flex;flex-direction:column;gap:16px}
+.card p{font-size:28px;color:var(--soft)}
+.card .ico{font-size:72px;line-height:1}
+.card.v{border-color:var(--violet)}
+.dark .card{background:#2A2458;border-color:#3D3578}
+.dark .card p{color:var(--softd)}
+.pill{display:inline-block;align-self:flex-start;background:var(--violet);color:var(--paper);border-radius:999px;padding:8px 24px;font-size:26px;font-weight:800}
+.gold .pill{background:var(--ink)}
+.letters{display:flex;gap:20px}
+.lt{width:150px;height:180px;border-radius:24px;display:flex;align-items:center;justify-content:center}
+.lt p{font-family:'Fredoka',Trebuchet MS,sans-serif;font-size:110px;font-weight:700;color:#FBF8F2}
+.lt.y p{color:var(--ink)}
+.big{font-family:'Fredoka',Trebuchet MS,sans-serif;font-size:96px;font-weight:700;line-height:1.05}
+.split{display:grid;grid-template-columns:1.15fr 1fr;gap:64px;align-items:center}
+.num{font-family:'Fredoka',Trebuchet MS,sans-serif;font-size:72px;font-weight:700;color:var(--violet);line-height:1}
+.gest{display:grid;grid-template-columns:100px 1fr;gap:24px;align-items:center;padding:18px 0;border-bottom:3px solid var(--line)}
+.gest p{font-size:34px}
+.mt{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.myth{background:#2A2458;border-radius:24px;padding:28px 32px;display:flex;flex-direction:column;gap:10px}
+.myth p{font-size:28px;color:var(--softd)}
+.myth h3{font-size:36px;color:var(--paper)}
+.x{color:#FF8FA3;font-weight:800}
+.qrbox{background:var(--paper);border-radius:28px;padding:28px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.qrbox p{color:var(--ink);font-size:24px;font-weight:800}
+a{color:var(--violet)}
+.dark a{color:var(--gold)}
+.qrbox a{color:var(--violet)}
+.foot{position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:var(--soft)}
+.dark .foot{color:var(--softd)}
+.rise{animation:rise .6s both;animation-delay:calc(var(--i,0) * 120ms)}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+table.t{font-size:28px;color:var(--ink);width:100%}
+.dark table.t{color:var(--paper)}
+
+.att .card p{font-size:26px}
+.att .card{padding:30px;gap:12px}
+
+</style></head><body>
+<div id="stage">
+<section id="cover" class="dark" style="justify-content:center">
+<p class="eyebrow rise">MÉMOGAME · LES 4 PILIERS DE L’APPRENTISSAGE</p>
+<h1 class="rise" style="--i:1">Débriefing :<br>ce que votre cerveau<br>vient de vivre</h1>
+<p class="lead rise" style="--i:2">Avec le Professeur Synapse · Lycée Jeanne d’Albret</p>
+<aside>Bienvenue pour le débriefing. Nous allons relier chaque mission du jeu à un pilier de l’apprentissage, puis repartir avec des gestes simples pour la maison.</aside>
+</section>
+
+<section id="coffre" class="gold" style="justify-content:center">
+<p class="pill">🔓 Le coffre est ouvert</p>
+<h2>Bravo ! Chaque équipe a apporté sa lettre</h2>
+<div class="letters"><div class="lt rise" style="background:#E5484D;--i:1"><p>N</p></div><div class="lt rise" style="background:#3D8BFF;--i:2"><p>E</p></div><div class="lt rise" style="background:#22B573;--i:3"><p>U</p></div><div class="lt y rise" style="background:#F5B301;--i:4"><p>R</p></div><div class="lt rise" style="background:#9B5CFF;--i:5"><p>O</p></div><div class="lt rise" style="background:#FF7A2F;--i:6"><p>N</p></div><div class="lt rise" style="background:#FF4F8B;--i:7"><p>E</p></div></div>
+<p class="lead" style="color:#3A3560">Sept équipes, sept lettres, un seul mot : on apprend mieux ensemble… et en étant actif !</p>
+<aside>Féliciter les équipes. Le mot final dépend du nombre d’équipes (TEST, OUBLI, RAPPEL ou NEURONE) : adapter si besoin. Chaque lettre a été gagnée en réussissant les 6 missions.</aside>
+</section>
+<section id="piliers">
+<p class="eyebrow">LE CADRE</p>
+<h2>Les 4 piliers de l’apprentissage</h2>
+<div class="grid4"><div class="card v rise" style="--i:1"><p class="ico">🎯</p><h3>Attention</h3><p>On ne retient que ce sur quoi on se concentre.</p></div><div class="card v rise" style="--i:2"><p class="ico">✋</p><h3>Engagement actif</h3><p>Le cerveau apprend en cherchant, pas en regardant.</p></div><div class="card v rise" style="--i:3"><p class="ico">💬</p><h3>Retour sur l’erreur</h3><p>Se tromper puis être corrigé vite : on progresse.</p></div><div class="card v rise" style="--i:4"><p class="ico">🌙</p><h3>Consolidation</h3><p>Répéter dans le temps et dormir pour ancrer.</p></div></div>
+<p class="muted small">D’après Stanislas Dehaene, <i>Apprendre !</i> (Odile Jacob, 2018)</p>
+<aside>Les quatre piliers décrits par Stanislas Dehaene. Chaque mission du jeu en illustrait un.</aside>
+</section>
+<section id="missions">
+<p class="eyebrow">CE QUE VOUS AVEZ VÉCU</p>
+<h2>Vos missions, une à une</h2>
+<table class="t"><tr><th style="width:34%">Mission</th><th style="width:42%">Ce que vous avez fait</th><th style="width:24%">Pilier</th></tr><tr><td>🃏 Les neuromythes</td><td>Trier le vrai du faux</td><td style="color:#6A4BE0">Idées reçues</td></tr><tr><td>👓 La phrase floue</td><td>Chercher, déchiffrer, reformuler</td><td style="color:#6A4BE0">Engagement actif</td></tr><tr><td>🎯 Ouvrez bien l’œil</td><td>Repérer l’essentiel sans se disperser</td><td style="color:#6A4BE0">Attention</td></tr><tr><td>💬 Le défi indonésien</td><td>Se tester, se tromper, être corrigé</td><td style="color:#6A4BE0">Retour sur l’erreur</td></tr><tr><td>📉 La courbe de l’oubli</td><td>Lire comment on oublie… et comment l’éviter</td><td style="color:#6A4BE0">Consolidation</td></tr><tr><td>🔤 Le mot mystère</td><td>Retrouver le vocabulaire des piliers</td><td style="color:#6A4BE0">Les 4 piliers</td></tr><tr><td>🎁 Défi de Stroop (bonus)</td><td>Lire la couleur, pas le mot</td><td style="color:#6A4BE0">Attention</td></tr></table>
+<aside>Faire le lien : demander à une équipe de raconter rapidement une mission et ce qu’elle en retient.</aside>
+</section>
+<section id="attention" class="dark">
+<p class="eyebrow">PILIER 1 · ATTENTION</p>
+<h2>L’attention n’est pas une, mais plusieurs</h2>
+<div class="grid4 att">
+<div class="card rise" style="--i:1"><h3>🚨 L’alerte</h3><p>Être éveillé, prêt à réagir… et le rester dans la durée. Elle baisse avec la fatigue : d’où l’intérêt des pauses.</p></div>
+<div class="card rise" style="--i:2"><h3>🔦 L’attention sélective</h3><p>Le projecteur : on éclaire une information et on laisse le reste dans l’ombre. Ce qui n’est pas éclairé n’est pas appris.</p></div>
+<div class="card rise" style="--i:3"><h3>🛑 Le contrôle exécutif</h3><p>Résister à l’automatisme pour suivre son objectif : c’est lui qui travaillait pendant le défi de Stroop.</p></div>
+<div class="card rise" style="--i:4"><h3>🔀 L’attention divisée</h3><p>Le multitâche est une illusion : le cerveau alterne, et chaque bascule coûte du temps et des erreurs.</p></div>
+</div>
+<p class="lead rise" style="--i:5">⚠️ Une notification <b style="color:#FFD23F">capte</b> l’attention malgré nous et détourne le projecteur.</p>
+<p class="small" style="color:#CFC8F2">Inspiré de Frédéric Guilleray (<i>Chut, je me concentre !</i> ; <i>Un ado concentré, c’est possible !</i>) et du modèle des réseaux attentionnels de Michael Posner.</p>
+<aside>Présenter les quatre facettes avec des exemples des parents : l’alerte (le lundi matin vs le vendredi soir), le projecteur (on n’entend plus la radio quand on lit), le contrôle (le Stroop du jeu), le faux multitâche (répondre à un SMS en révisant). Insister sur l’attention captée : le téléphone attire le projecteur sans qu’on le décide. Transition vers la vidéo sur le téléphone portable et l’attention.</aside>
+</section>
+
+<section id="video" class="dark">
+<p class="eyebrow">VIDÉO · 🎬 À REGARDER ENSEMBLE</p>
+<div class="split" style="flex:1">
+<div style="display:flex;flex-direction:column;gap:32px">
+<h2 style="font-size:60px">Les écrans et le cerveau</h2>
+<p class="pill" style="background:#FFD23F;color:#1B1640">📱 Le téléphone portable et l’attention</p>
+<p class="lead">Steve Masson, chercheur en neuroéducation · « Cerveau et apprentissage »</p>
+<div class="card"><h3 style="color:#FFD23F">Pendant la vidéo, cherchez :</h3><p>Que devient l’attention quand le téléphone est à portée de main pendant le travail ?</p><p>Quel conseil pourriez-vous appliquer dès ce soir à la maison ?</p></div>
+</div>
+<div class="qrbox"><svg aria-label="QR code vers la vidéo de Steve Masson" width="33" height="33" viewBox="0 0 33 33" style="width:300px;height:300px" shape-rendering="crispEdges"><rect width="33" height="33" fill="#FBF8F2"/><path d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM11 2h1v1h-1zM15 2h1v1h-1zM18 2h1v1h-1zM19 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM25 2h1v1h-1zM26 2h1v1h-1zM27 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM30 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM11 3h1v1h-1zM13 3h1v1h-1zM14 3h1v1h-1zM15 3h1v1h-1zM17 3h1v1h-1zM18 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM30 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM26 4h1v1h-1zM27 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM26 5h1v1h-1zM27 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM22 7h1v1h-1zM24 7h1v1h-1zM30 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM25 8h1v1h-1zM26 8h1v1h-1zM27 8h1v1h-1zM28 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM14 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM21 9h1v1h-1zM2 10h1v1h-1zM3 10h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM11 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM15 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM19 10h1v1h-1zM23 10h1v1h-1zM25 10h1v1h-1zM27 10h1v1h-1zM29 10h1v1h-1zM2 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM21 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM25 11h1v1h-1zM26 11h1v1h-1zM30 11h1v1h-1zM4 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM11 12h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM15 12h1v1h-1zM17 12h1v1h-1zM18 12h1v1h-1zM19 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM2 13h1v1h-1zM6 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM13 13h1v1h-1zM17 13h1v1h-1zM21 13h1v1h-1zM22 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM29 13h1v1h-1zM2 14h1v1h-1zM4 14h1v1h-1zM5 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM13 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM27 14h1v1h-1zM28 14h1v1h-1zM2 15h1v1h-1zM3 15h1v1h-1zM4 15h1v1h-1zM5 15h1v1h-1zM6 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM15 15h1v1h-1zM18 15h1v1h-1zM20 15h1v1h-1zM21 15h1v1h-1zM23 15h1v1h-1zM24 15h1v1h-1zM26 15h1v1h-1zM30 15h1v1h-1zM3 16h1v1h-1zM5 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM25 16h1v1h-1zM27 16h1v1h-1zM28 16h1v1h-1zM3 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM10 17h1v1h-1zM11 17h1v1h-1zM14 17h1v1h-1zM22 17h1v1h-1zM24 17h1v1h-1zM25 17h1v1h-1zM26 17h1v1h-1zM29 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM7 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM11 18h1v1h-1zM14 18h1v1h-1zM16 18h1v1h-1zM19 18h1v1h-1zM25 18h1v1h-1zM27 18h1v1h-1zM28 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM6 19h1v1h-1zM9 19h1v1h-1zM10 19h1v1h-1zM11 19h1v1h-1zM18 19h1v1h-1zM21 19h1v1h-1zM22 19h1v1h-1zM24 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM28 19h1v1h-1zM30 19h1v1h-1zM2 20h1v1h-1zM6 20h1v1h-1zM7 20h1v1h-1zM8 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM13 20h1v1h-1zM14 20h1v1h-1zM15 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM25 20h1v1h-1zM28 20h1v1h-1zM2 21h1v1h-1zM4 21h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM10 21h1v1h-1zM12 21h1v1h-1zM13 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM29 21h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM16 22h1v1h-1zM18 22h1v1h-1zM19 22h1v1h-1zM22 22h1v1h-1zM23 22h1v1h-1zM24 22h1v1h-1zM25 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM29 22h1v1h-1zM30 22h1v1h-1zM10 23h1v1h-1zM11 23h1v1h-1zM12 23h1v1h-1zM14 23h1v1h-1zM15 23h1v1h-1zM16 23h1v1h-1zM20 23h1v1h-1zM22 23h1v1h-1zM26 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM29 23h1v1h-1zM30 23h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM7 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM11 24h1v1h-1zM15 24h1v1h-1zM16 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM21 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM27 24h1v1h-1zM28 24h1v1h-1zM2 25h1v1h-1zM8 25h1v1h-1zM11 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM18 25h1v1h-1zM21 25h1v1h-1zM22 25h1v1h-1zM26 25h1v1h-1zM30 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM5 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM14 26h1v1h-1zM16 26h1v1h-1zM17 26h1v1h-1zM18 26h1v1h-1zM19 26h1v1h-1zM22 26h1v1h-1zM23 26h1v1h-1zM24 26h1v1h-1zM25 26h1v1h-1zM26 26h1v1h-1zM28 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM2 27h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM8 27h1v1h-1zM10 27h1v1h-1zM12 27h1v1h-1zM15 27h1v1h-1zM18 27h1v1h-1zM19 27h1v1h-1zM20 27h1v1h-1zM21 27h1v1h-1zM25 27h1v1h-1zM27 27h1v1h-1zM28 27h1v1h-1zM29 27h1v1h-1zM30 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM5 28h1v1h-1zM6 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM17 28h1v1h-1zM18 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM26 28h1v1h-1zM27 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h1v1h-1zM11 29h1v1h-1zM13 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM22 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM29 29h1v1h-1zM2 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM7 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM14 30h1v1h-1zM18 30h1v1h-1zM19 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM23 30h1v1h-1zM25 30h1v1h-1zM26 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1z" fill="#1B1640"/></svg><p>Scannez pour revoir la vidéo à la maison</p><p><a href="https://www.youtube.com/watch?v=jyD_kzbJB_I">youtube.com/watch?v=jyD_kzbJB_I</a></p></div>
+</div>
+<aside>Ouvrir la vidéo dans un onglet avant la séance (lien sur la diapositive ou https://www.youtube.com/watch?v=jyD_kzbJB_I) et la lancer en plein écran. Après la vidéo, recueillir les réponses aux deux questions avant de passer à la diapositive suivante.</aside>
+</section>
+<section id="ecrans">
+<p class="eyebrow">APRÈS LA VIDÉO · LE TÉLÉPHONE À LA MAISON</p>
+<h2>Protéger l’attention pendant les devoirs</h2>
+<div class="grid3">
+<div class="card v rise" style="--i:1"><p class="ico">📵</p><h3>Le téléphone dans une autre pièce</h3><p>Même éteint et posé à côté, il attire une partie de l’attention.</p></div>
+<div class="card v rise" style="--i:2"><p class="ico">🔕</p><h3>Une seule fenêtre ouverte</h3><p>Notifications coupées, un seul onglet : celui du travail en cours.</p></div>
+<div class="card v rise" style="--i:3"><p class="ico">⏱️</p><h3>Des pauses prévues</h3><p>25 minutes de travail concentré, puis une vraie pause : l’écran devient une récompense, pas une interruption.</p></div>
+</div>
+<p class="lead">À la maison, on peut le décider ensemble, et montrer l’exemple.</p>
+<aside>Faire réagir les parents : comment cela se passe chez vous ? Insister sur le fait que ces règles fonctionnent mieux si elles sont négociées avec l’adolescent et appliquées aussi par les adultes.</aside>
+</section>
+
+<section id="engagement">
+<p class="eyebrow">PILIER 2 · ENGAGEMENT ACTIF</p>
+<h2>Se tester fait mieux retenir que relire</h2>
+<div class="split" style="align-items:stretch">
+<div class="card" style="border-color:#E4DEF5"><h3 class="muted">😴 Ce qui rassure… mais retient peu</h3><p>Relire trois fois sa leçon</p><p>Surligner tout le chapitre</p><p>Recopier proprement son cours</p></div>
+<div class="card v"><h3 style="color:#6A4BE0">💪 Ce qui fait vraiment retenir</h3><p>Réciter sans regarder, puis vérifier</p><p>Répondre à des questions, faire des flashcards</p><p>Expliquer la leçon à quelqu’un d’autre</p></div>
+</div>
+<p class="lead">À la maison : « Explique-moi ce que tu as appris aujourd’hui » vaut mieux que « Tu as relu ta leçon ? »</p>
+<aside>Lien avec la phrase floue : il a fallu chercher activement pour comprendre. Le cerveau retient ce qu’il a dû aller chercher. Le sentiment de facilité en relisant est trompeur.</aside>
+</section>
+<section id="erreur" class="gold" style="justify-content:center">
+<p class="eyebrow" style="color:#1B1640">PILIER 3 · RETOUR SUR L’ERREUR</p>
+<p class="big">Se tromper n’est pas échouer :<br>c’est une étape pour apprendre.</p>
+<div class="grid3">
+<div class="card rise" style="--i:1;border-color:#1B1640"><h3>Essayer</h3><p>Le cerveau fait une prédiction, même fausse.</p></div>
+<div class="card rise" style="--i:2;border-color:#1B1640"><h3>Être corrigé vite</h3><p>Un retour rapide et précis permet d’ajuster.</p></div>
+<div class="card rise" style="--i:3;border-color:#1B1640"><h3>Recommencer</h3><p>On réessaie plus tard pour vérifier que c’est acquis.</p></div>
+</div>
+<aside>Lien avec le défi indonésien : on se teste, on se trompe, on est corrigé, et on retient mieux. À la maison : valoriser l’essai, corriger sans juger, et revenir sur l’erreur quelques jours plus tard.</aside>
+</section>
+<section id="consolidation">
+<p class="eyebrow">PILIER 4 · CONSOLIDATION</p>
+<h2>On oublie vite… sauf si l’on réactive</h2>
+<div class="split" style="grid-template-columns:780px 1fr">
+<div style="display:flex;flex-direction:column;gap:16px"><svg aria-label="Courbe de l’oubli : sans révision le souvenir chute vite ; avec des rappels espacés il reste haut" width="760" height="400" viewBox="0 0 760 400" style="width:760px;height:400px"><rect width="760" height="400" fill="#FFFFFF" rx="20"/><line x1="40" y1="275.0" x2="740" y2="275.0" stroke="#E4DEF5" stroke-width="2"/><line x1="40" y1="190.0" x2="740" y2="190.0" stroke="#E4DEF5" stroke-width="2"/><line x1="40" y1="105.0" x2="740" y2="105.0" stroke="#E4DEF5" stroke-width="2"/><line x1="40" y1="20.0" x2="740" y2="20.0" stroke="#E4DEF5" stroke-width="2"/><line x1="40" y1="20" x2="40" y2="360" stroke="#4A4766" stroke-width="3"/><line x1="40" y1="360" x2="740" y2="360" stroke="#4A4766" stroke-width="3"/><path d="M40.0 20.0 L117.3 122.0 L117.3 20.0 L290.7 94.8 L290.7 20.0 L461.3 67.6 L461.3 20.0 L720.0 47.2" fill="none" stroke="#E0A800" stroke-width="7" stroke-linejoin="round"/><path d="M40.0 20.0 C52.9 43.8 93.3 131.1 117.3 162.8 C141.3 194.5 155.1 197.9 184.0 210.4 C212.9 222.9 257.3 231.9 290.7 237.6 C324.0 243.3 355.6 239.9 384.0 244.4 C412.4 248.9 431.6 259.7 461.3 264.8 C491.1 269.9 519.6 271.0 562.7 275.0 C605.8 279.0 693.8 286.3 720.0 288.6" fill="none" stroke="#6A4BE0" stroke-width="8" stroke-linecap="round"/></svg>
+<p class="small"><span style="color:#6A4BE0"><b>━ sans révision</b></span> : plus de la moitié oubliée en un jour · <span style="color:#B07F00"><b>━ avec des rappels espacés</b></span></p></div>
+<div style="display:flex;flex-direction:column;gap:24px">
+<div class="card v"><h3>📅 Réviser en plusieurs fois</h3><p>Le lendemain, quelques jours après, une semaine après… plutôt que tout la veille.</p></div>
+<div class="card v"><h3>🌙 Dormir</h3><p>Pendant le sommeil, le cerveau rejoue et range ce qu’il a appris.</p></div>
+</div></div>
+<aside>Lien avec la courbe de l’oubli d’Ebbinghaus (mission puzzle). La courbe dorée est schématique : chaque rappel remonte le souvenir et le fait baisser moins vite ensuite.</aside>
+</section>
+<section id="mythes" class="dark">
+<p class="eyebrow">NEUROMYTHES</p>
+<h2>Six idées reçues à oublier</h2>
+<div class="mt"><div class="myth rise" style="--i:1"><p class="x">❌ IDÉE REÇUE</p><h3>10 % du cerveau</h3><p>Nous utilisons tout notre cerveau, chaque zone a un rôle.</p></div><div class="myth rise" style="--i:2"><p class="x">❌ IDÉE REÇUE</p><h3>Les styles d’apprentissage</h3><p>Visuel, auditif… : s’y adapter n’améliore pas les résultats.</p></div><div class="myth rise" style="--i:3"><p class="x">❌ IDÉE REÇUE</p><h3>Cerveau gauche / droit</h3><p>Logique et créativité mobilisent les deux hémisphères.</p></div><div class="myth rise" style="--i:4"><p class="x">❌ IDÉE REÇUE</p><h3>L’effet Mozart</h3><p>Écouter Mozart ne rend pas plus intelligent.</p></div><div class="myth rise" style="--i:5"><p class="x">❌ IDÉE REÇUE</p><h3>Le sucre et l’agitation</h3><p>Les études ne montrent pas de lien entre sucre et hyperactivité.</p></div><div class="myth rise" style="--i:6"><p class="x">❌ IDÉE REÇUE</p><h3>Le multitâche</h3><p>Le cerveau alterne : réviser en répondant à ses messages coûte cher.</p></div></div>
+<aside>Ce qui est vrai : le cerveau se transforme toute la vie quand on apprend, et dormir aide à retenir. Reprendre les cartes de la mission neuromythes. Insister sur la plasticité cérébrale : rien n’est figé, tout le monde peut progresser.</aside>
+</section>
+<section id="gestes">
+<p class="eyebrow">À LA MAISON</p>
+<h2>Cinq gestes simples pour aider votre enfant</h2>
+<div><div class="gest rise" style="--i:1"><p class="num">1</p><div style="display:flex;justify-content:space-between;gap:24px;align-items:center"><p>Demander « explique-moi » plutôt que « tu as relu ? »</p><p class="pill" style="font-size:24px">Engagement actif</p></div></div><div class="gest rise" style="--i:2"><p class="num">2</p><div style="display:flex;justify-content:space-between;gap:24px;align-items:center"><p>Mettre le téléphone dans une autre pièce pendant le travail</p><p class="pill" style="font-size:24px">Attention</p></div></div><div class="gest rise" style="--i:3"><p class="num">3</p><div style="display:flex;justify-content:space-between;gap:24px;align-items:center"><p>Dédramatiser l’erreur et corriger rapidement, sans juger</p><p class="pill" style="font-size:24px">Retour sur l’erreur</p></div></div><div class="gest rise" style="--i:4"><p class="num">4</p><div style="display:flex;justify-content:space-between;gap:24px;align-items:center"><p>Réviser un peu chaque jour, pas tout la veille</p><p class="pill" style="font-size:24px">Consolidation</p></div></div><div class="gest rise" style="--i:5"><p class="num">5</p><div style="display:flex;justify-content:space-between;gap:24px;align-items:center"><p>Protéger le sommeil, surtout la veille d’un contrôle</p><p class="pill" style="font-size:24px">Consolidation</p></div></div></div>
+<aside>Ces cinq gestes reprennent les idées clés de la fiche bilan. Proposer aux parents d’en choisir un seul à tester dès ce soir.</aside>
+</section>
+<section id="fin" class="dark" style="justify-content:center">
+<p class="eyebrow">POUR FINIR</p>
+<h1 class="rise">Merci de votre attention !</h1>
+<p class="pill rise" style="--i:2;background:#FFD23F;color:#1B1640">💬 Place à vos questions</p>
+<aside>Clôture : remercier les parents, rappeler la fiche bilan et proposer un temps de questions.</aside>
+</section>
+
+</div>
+<div id="notes"></div>
+<div id="hud"><button id="prev" title="Précédente (←)">◀</button><span id="cnt"></span><button id="next" title="Suivante (→ ou espace)">▶</button><button id="nt" title="Notes (N)">📝</button><button id="fs" title="Plein écran (F)">⛶</button></div>
+<script>
+const S=[...document.querySelectorAll("#stage>section")];let i=0;
+const st=document.getElementById("stage");
+function fit(){const k=Math.min(innerWidth/1920,innerHeight/1080);st.style.transform="scale("+k+") translate(-50%,-50%)";}
+function show(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach((s,k)=>s.classList.toggle("on",k===i));
+  document.getElementById("cnt").textContent=(i+1)+" / "+S.length;const a=S[i].querySelector("aside");document.getElementById("notes").textContent=a?a.textContent:"";
+  try{history.replaceState(null,"","#"+(i+1));}catch(e){}}
+addEventListener("resize",fit);
+addEventListener("keydown",e=>{if(["ArrowRight","PageDown"," ","Enter"].includes(e.key)){e.preventDefault();show(i+1);}
+  else if(["ArrowLeft","PageUp","Backspace"].includes(e.key)){e.preventDefault();show(i-1);}
+  else if(e.key==="Home")show(0);else if(e.key==="End")show(S.length-1);
+  else if(e.key==="f"||e.key==="F")fs();else if(e.key==="n"||e.key==="N")document.getElementById("notes").classList.toggle("on");});
+document.getElementById("prev").onclick=()=>show(i-1);document.getElementById("next").onclick=()=>show(i+1);
+document.getElementById("nt").onclick=()=>document.getElementById("notes").classList.toggle("on");
+function fs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen();}
+document.getElementById("fs").onclick=fs;
+document.addEventListener("fullscreenchange",()=>document.body.classList.toggle("fs",!!document.fullscreenElement));
+st.addEventListener("click",e=>{if(e.target.closest("a"))return;show(i+(e.clientX<innerWidth/3?-1:1));});
+fit();show((parseInt(location.hash.slice(1))||1)-1);
+</script></body></html>
