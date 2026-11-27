@@ -494,7 +494,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
         <li>💡 Les <b>indices</b> sont comptés : discutez d’abord en équipe.</li>
         <li>📝 Après chaque mission, complétez la case correspondante de votre <b>fiche bilan</b>.</li>
         <li>🤝 Le dernier code se trouve <b>avec toutes les équipes</b>.</li>
-        <li>📣 Après chaque mission réussie, <b>un membre de l’équipe prévient le professeur</b> pour la faire valider sur le tableau de bord.</li>
+        <li>📣 Après <b>chaque</b> mission réussie, <b>un membre de l’équipe vient l’inscrire sur le tableau de bord, auprès du professeur</b>.</li>
       </ul>
     </div>
     <div class="mlist" id="mlist"></div>
@@ -1546,7 +1546,7 @@ function renderStep(){
     if(S.anim&&S.step>=M.steps.length){S.ad=S.ad||{};S.ad[curM]=true;S.step=0;save();updateKeys();openModal('<div class="bigkey">🧪</div><h2 style="margin:6px 0">Mission 0'+(curM+1)+' testée</h2><p>Mode professeur : toutes les missions restent ouvertes, vous pouvez les rejouer dans n’importe quel ordre.</p><button class="btn" id="mClose">🔬 Retour aux missions</button>');$("#mClose").onclick=()=>{closeModal();renderHub();show("s-hub");};return;}
     if(S.step>=M.steps.length){S.m++;S.step=0;save();updateKeys();
       const next=S.m<MISSIONS.length?"Mission 0"+(S.m+1)+" déverrouillée !":"Le code final est déverrouillé !";
-      openModal('<div class="bigkey">🔓</div><h2 style="margin:6px 0">Mission 0'+(curM+1)+' validée !</h2><p style="font-size:18px">'+next+'</p><p class="fiche" style="text-align:left;background:#fff7d6;border-color:#f5b301">📣 <b>Un membre de l’équipe va prévenir le professeur</b> : « Équipe '+GROUP_NAMES[S.g-1]+', mission '+(curM+1)+' réussie ! »</p><p class="fiche" style="text-align:left">📝 Avant de continuer, vérifiez que la case « Mission '+(curM+1)+' » de votre fiche bilan est complétée.</p><button class="btn" id="mClose">🔬 Retour aux missions</button>');
+      openModal('<div class="bigkey">🔓</div><h2 style="margin:6px 0">Mission 0'+(curM+1)+' validée !</h2><p style="font-size:18px">'+next+'</p><p class="fiche" style="text-align:left;background:#fff7d6;border-color:#f5b301">📣 <b>Un membre de l’équipe vient maintenant l’inscrire sur le tableau de bord, auprès du professeur</b> : « Équipe '+GROUP_NAMES[S.g-1]+', mission '+(curM+1)+' réussie ! »</p><p class="fiche" style="text-align:left">📝 Avant de continuer, vérifiez que la case « Mission '+(curM+1)+' » de votre fiche bilan est complétée.</p><button class="btn" id="mClose">🔬 Retour aux missions</button>');
       $("#mClose").onclick=()=>{closeModal();renderHub();show("s-hub");};
     }else{save();renderStep();window.scrollTo({top:0,behavior:"smooth"});}
   });
