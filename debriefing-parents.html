@@ -108,6 +108,17 @@ table.t{font-size:28px;color:var(--ink);width:100%}
 </div>
 <aside>Cliquer sur le bouton jaune : la vidéo s’ouvre dans un nouvel onglet. Cliquer sur « Lancer l’intro », puis ⛶ pour le plein écran. À la fin, revenir au diaporama.</aside>
 </section>
+<section id="tableau" style="justify-content:center">
+<p class="eyebrow rise">PLACE AU JEU</p>
+<h2 class="rise" style="--i:1">Le tableau de bord de la séance</h2>
+<div class="grid3">
+<div class="card v rise" style="--i:2"><h3>⏱️ Le chrono</h3><p>Le temps restant pour toutes les équipes, avec l’alerte des 10 dernières minutes.</p></div>
+<div class="card v rise" style="--i:3"><h3>✅ Les missions</h3><p>Après chaque mission réussie, un membre de l’équipe vient l’inscrire auprès du professeur.</p></div>
+<div class="card v rise" style="--i:4"><h3>🎵 L’ambiance</h3><p>Une musique au choix, qui s’accélère à la fin, et un jingle quand une équipe a fini.</p></div>
+</div>
+<p class="pill rise" style="--i:5;background:#FFD23F;color:#1B1640;font-size:40px;padding:18px 40px"><a class="dashlink" href="index.html#tableau" style="color:#1B1640;text-decoration:none">📊 Ouvrir le tableau de bord</a></p>
+<aside>Le bouton ouvre le tableau de bord du jeu parents (nouvel onglet depuis Claude, plein écran dans le diaporama du site). Lancer le chrono, choisir la musique, puis cocher les missions au fur et à mesure que les équipes viennent les annoncer.</aside>
+</section>
 <section id="coffre" class="gold" style="justify-content:center">
 <p class="pill">🔓 Le coffre est ouvert</p>
 <h2>Bravo ! Chaque équipe a apporté sa lettre</h2>
@@ -415,7 +426,10 @@ document.getElementById("fs").onclick=fs;
 document.addEventListener("fullscreenchange",()=>document.body.classList.toggle("fs",!!document.fullscreenElement));
 st.addEventListener("click",e=>{if(e.target.closest("a"))return;show(i+(e.clientX<innerWidth/3?-1:1));});
 fit();show((parseInt(location.hash.slice(1))||1)-1);
-</script><div id="vidModal" style="display:none;position:fixed;inset:0;background:rgba(5,3,20,.92);z-index:20;align-items:center;justify-content:center;flex-direction:column;gap:12px"><div style="width:min(92vw,160vh);aspect-ratio:16/9"><iframe id="vidFrame" style="width:100%;height:100%;border:0;border-radius:12px" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div><button id="vidClose" style="background:#FFD23F;color:#1B1640;border:0;border-radius:999px;padding:10px 22px;font:800 18px Nunito,Arial,sans-serif;cursor:pointer">✖ Fermer la vidéo</button></div>
+</script><div id="dashModal" style="display:none;position:fixed;inset:0;background:#0d0a24;z-index:21"><iframe id="dashFrame" style="width:100%;height:100%;border:0" allow="autoplay; fullscreen"></iframe><button id="dashClose" style="position:fixed;top:12px;right:12px;z-index:22;background:#FFD23F;color:#1B1640;border:0;border-radius:999px;padding:10px 20px;font:800 16px Nunito,Arial,sans-serif;cursor:pointer">✖ Retour au diaporama</button></div>
+<script>document.addEventListener("click",e=>{const a=e.target.closest("a.dashlink");if(!a)return;e.preventDefault();e.stopPropagation();const f=document.getElementById("dashFrame");if(!f.src)f.src=a.getAttribute("href");document.getElementById("dashModal").style.display="block";},true);
+document.getElementById("dashClose").onclick=()=>{document.getElementById("dashModal").style.display="none";};</script>
+<div id="vidModal" style="display:none;position:fixed;inset:0;background:rgba(5,3,20,.92);z-index:20;align-items:center;justify-content:center;flex-direction:column;gap:12px"><div style="width:min(92vw,160vh);aspect-ratio:16/9"><iframe id="vidFrame" style="width:100%;height:100%;border:0;border-radius:12px" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div><button id="vidClose" style="background:#FFD23F;color:#1B1640;border:0;border-radius:999px;padding:10px 22px;font:800 18px Nunito,Arial,sans-serif;cursor:pointer">✖ Fermer la vidéo</button></div>
 <script>document.addEventListener("click",e=>{const a=e.target.closest("a.vidlink");if(!a)return;e.preventDefault();e.stopPropagation();const m=document.getElementById("vidModal");document.getElementById("vidFrame").src=a.href;m.style.display="flex";},true);
 document.getElementById("vidClose").onclick=()=>{document.getElementById("vidFrame").src="";document.getElementById("vidModal").style.display="none";};
 addEventListener("keydown",e=>{if(e.key==="Escape"&&document.getElementById("vidModal").style.display==="flex")document.getElementById("vidClose").click();},true);</script></body></html>

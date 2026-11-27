@@ -1832,6 +1832,7 @@ $("#dMus").onclick=()=>{MUS.isOn()?MUS.stop():MUS.start();musBtn();};
 $("#dStyle").onchange=()=>{MS.s=$("#dStyle").value;msSave();MUS.setStyle(MS.s);};
 $("#dVol").oninput=()=>{MS.v=+$("#dVol").value;msSave();MUS.setVol(MS.v/100);};
 $("#dashOpen").onclick=dOpen;
+if(location.hash==="#tableau"){setTimeout(dOpen,50);}
 $("#qrkPrint").onclick=()=>{document.querySelector("#printKit").innerHTML=document.querySelector("#qrkSrc").innerHTML;try{window.print();}catch(e){}};
 
 refreshNomat();
