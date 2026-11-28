@@ -398,7 +398,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
   <div class="badge" id="teamBadge"></div>
   <div id="keys"></div>
   <button class="btn ghost small" id="toMap">🔬 Missions</button>
-  <div id="timer">50:00</div>
+  <div id="timer">50:00</div><span id="penTag" title="Pénalités d’indices" style="display:none;font:700 13px Fredoka,sans-serif;color:#fff;background:#e5484d;border-radius:999px;padding:3px 9px;margin-left:-4px"></span>
 </div>
 
 <div class="wrap">
@@ -439,7 +439,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
       <h2 class="fred" style="margin:4px 0;text-align:center">Le labo des sciences cognitives</h2>
       <p style="margin:6px 0;text-align:center;opacity:.9">Les missions se déverrouillent l’une après l’autre.</p>
       <ul>
-        <li>💡 Les <b>indices</b> sont comptés : discutez d’abord en équipe.</li>
+        <li>💡 Les <b>indices</b> coûtent du temps : <b>petit indice +1 min</b>, <b>gros indice +3 min</b> sur le chrono. Discutez d’abord en équipe !</li>
         <li>📝 Après chaque mission, complétez la case correspondante de votre <b>fiche bilan</b>.</li>
         <li>🤝 Le dernier code se trouve <b>avec toutes les équipes</b>.</li>
       </ul>
@@ -454,7 +454,7 @@ mark.f{background:#ffe680;padding:0 .2em;border-radius:4px;font-weight:800}
     <div id="stepBox"></div>
     <div class="hintbox" id="hintBox"></div>
     <div class="tools">
-      <button class="btn sec small" id="hintBtn">💡 Indice</button>
+      <button class="btn sec small" id="hintBtn">💡 Petit indice (+1 min)</button><button class="btn sec small" id="hint2Btn">🔎 Gros indice (+3 min)</button>
       <button class="btn sec small" id="backBtn">🔬 Retour aux missions</button>
     </div>
   </div>
@@ -667,7 +667,7 @@ function enterGame(){
 setInterval(()=>{
   if(!S)return;
   const t=$("#timer");const ref=S.end||Date.now();
-  let left=DURATION-(ref-S.start);const neg=left<0;left=Math.abs(left);
+  let left=DURATION-(ref-S.start)-penMin()*60000;penShow();const neg=left<0;left=Math.abs(left);
   const m=Math.floor(left/60000),s=Math.floor(left%60000/1000);
   t.textContent=(neg?"+":"")+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
   t.classList.toggle("warn",!S.end&&(neg||left<5*60000));
@@ -1445,7 +1445,7 @@ function renderStep(){
   const box=$("#stepBox");box.innerHTML="";
   const step=M.steps[st];
   box.appendChild(el("h3",{class:"stitle",style:"color:#5b3fd6"},step.title));
-  $("#hintBox").classList.remove("on");$("#hintBox").innerHTML="";
+  $("#hintBox").classList.remove("on");$("#hintBox").innerHTML="";hRender();
   step.render(box,()=>{
     S.step++;
     if(S.anim&&S.step>=M.steps.length){S.ad=S.ad||{};S.ad[curM]=true;S.step=0;save();updateKeys();openModal('<div class="bigkey">🧪</div><h2 style="margin:6px 0">Mission 0'+(curM+1)+' testée</h2><p>Mode professeur : toutes les missions restent ouvertes, vous pouvez les rejouer dans n’importe quel ordre.</p><button class="btn" id="mClose">🔬 Retour aux missions</button>');$("#mClose").onclick=()=>{closeModal();renderHub();show("s-hub");};return;}
@@ -1456,7 +1456,37 @@ function renderStep(){
     }else{save();renderStep();window.scrollTo({top:0,behavior:"smooth"});}
   });
 }
-$("#hintBtn").onclick=()=>{const hb=$("#hintBox");if(hb.classList.contains("on"))return;S.hints++;save();hb.innerHTML="💡 <b>Indice :</b> "+MISSIONS[curM].steps[S.step].hint;hb.classList.add("on");};
+const HP={1:1,2:3};const SMALL_HINTS=[["Les 10 cartes","Toutes les cartes ne se valent pas : certaines affirmations sont des neuromythes. Lesquelles faut-il garder ?"],["Le puzzle de la courbe","Commencez par les pièces qui portent du texte (titre, axes), puis raccordez les morceaux de la courbe."],["Le planning de révision","Sur la courbe, l’oubli est-il plus rapide au début ou à la fin ?"],["Avant le bac blanc","Sur la courbe, l’oubli est-il plus rapide au début ou à la fin ?"],["La veille","Relisez les cartes VRAIES de la mission 1 : l’une d’elles parle de ce qui se passe la nuit."],["Les phrases des chercheurs","Chaque code « a-b » désigne une lettre précise, à aller chercher dans les phrases des chercheurs."],["Les 3 composantes","Relisez la définition de chaque composante de l’attention avant de classer les situations."],["Le téléphone qui vibre","Le pilier en jeu ici est l’attention."],["L’ordinateur en amphi","Le pilier en jeu ici est l’attention."],["Apa kabar","Ne relisez pas la liste en boucle : partagez-vous les mots dans l’équipe."],["La copie rendue","Le pilier en jeu ici est le retour sur l’erreur : une note seule ne suffit pas pour progresser."],["Le bac blanc raté","Le pilier en jeu ici est le retour sur l’erreur : une note seule ne suffit pas pour progresser."],["Le DS de Léo","Le pilier en jeu ici est le retour sur l’erreur : une note seule ne suffit pas pour progresser."],["Retrouver la vue","Pour chaque méthode, demandez-vous : fait-elle travailler la mémoire, ou seulement les yeux ?"],["30 minutes avant","Une seule de ces méthodes fait vraiment travailler la mémoire."],["Ta semaine de Terminale","Pensez aux 4 piliers : attention, engagement actif, retour sur l’erreur, consolidation (et sommeil !)."],["La bonne question","Une bonne question fait parler l’enfant, pas seulement répondre par oui ou par non."]];
+function smallHint(title,big){for(const [k,v] of SMALL_HINTS){if(title.indexOf(k)===0)return v;}return "Relisez calmement la consigne en équipe : chaque mot compte.";}
+function hKey(){return curM+"-"+S.step;}
+function hLevel(){S.hl=S.hl||{};return S.hl[hKey()]||0;}
+function penMin(){return S&&S.pen?S.pen:0;}
+function hRender(note){
+  const hb=$("#hintBox");const st=MISSIONS[curM].steps[S.step];const lv=hLevel();
+  const free=/^Pas d’indice/.test(st.hint);
+  $("#hintBtn").style.display=free||lv>=1?"none":"";$("#hint2Btn").style.display=free||lv>=2?"none":"";
+  if(!lv&&!note){hb.classList.remove("on");hb.innerHTML="";return;}
+  let h="";
+  if(lv>=1)h+='<div>💡 <b>Petit indice :</b> '+smallHint(st.title,st.hint)+'</div>';
+  if(lv>=2)h+='<div style="margin-top:6px">'+(S.hlj&&S.hlj[hKey()]?'🎁 <b>Gros indice offert (sans pénalité) :</b> ':'🔎 <b>Gros indice :</b> ')+st.hint+'</div>';
+  if(note)h=note+(h?'<div style="margin-top:8px">'+h+'</div>':'');
+  hb.innerHTML=h;hb.classList.add("on");
+}
+function hAsk(level){
+  const st=MISSIONS[curM].steps[S.step];
+  if(/^Pas d’indice/.test(st.hint)){$("#hintBox").innerHTML="💡 "+st.hint;$("#hintBox").classList.add("on");return;}
+  const m=HP[level];
+  hRender('<div style="font-weight:600">'+(level===1?'💡 Petit indice':'🔎 Gros indice')+' : <b>+'+m+' min</b> sur votre chrono. Vous avez bien discuté en équipe ?</div><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="hYes">Oui, on le prend</button><button class="btn sec small" id="hNo">Non, on cherche encore</button></div>');
+  $("#hYes").onclick=()=>hGive(level,false);$("#hNo").onclick=()=>hRender();
+}
+function hGive(level,gift){
+  S.hl=S.hl||{};const k=hKey();const before=S.hl[k]||0;if(before>=level){hRender();return;}
+  if(!gift){S.pen=(S.pen||0)+HP[level];S.hints=(S.hints||0)+1;S.hc=S.hc||{1:0,2:0};S.hc[level]++;}
+  else{S.hlj=S.hlj||{};S.hlj[k]=true;}
+  S.hl[k]=level;save();hRender();penShow();
+}
+function penShow(){const p=$("#penTag");if(!p)return;const v=penMin();p.textContent=v?"+"+v+" min":"";p.style.display=v?"":"none";}
+$("#hintBtn").onclick=()=>hAsk(1);$("#hint2Btn").onclick=()=>hAsk(2);
 $("#backBtn").onclick=()=>{renderHub();show("s-hub");};
 function openModal(h){$("#modalCard").innerHTML=h;$("#modal").classList.add("on");}
 function closeModal(){$("#modal").classList.remove("on");}
@@ -1476,8 +1506,8 @@ function tryWord(){
 }
 $("#wordBtn").onclick=tryWord;$("#wordIn").addEventListener("keydown",e=>{if(e.key==="Enter")tryWord();});
 function showWin(){
-  const used=S.end-S.start;const m=Math.floor(used/60000),s=Math.floor(used%60000/1000);
-  $("#winStats").innerHTML="Équipe "+GROUP_NAMES[S.g-1]+" · Temps : <b>"+m+" min "+String(s).padStart(2,"0")+" s</b> · Indices : <b>"+S.hints+"</b><br>Mot de passe : <b>"+WORDS[S.n]+"</b>, comme "+(WORD_SENSE[WORDS[S.n]]||"");
+  const used=S.end-S.start+penMin()*60000;const m=Math.floor(used/60000),s=Math.floor(used%60000/1000);
+  $("#winStats").innerHTML="Équipe "+GROUP_NAMES[S.g-1]+" · Temps : <b>"+m+" min "+String(s).padStart(2,"0")+" s</b>"+(penMin()?" (dont "+penMin()+" min de pénalités)":"")+" · Indices : <b>"+((S.hc&&S.hc[1])||0)+" petit(s), "+((S.hc&&S.hc[2])||0)+" gros</b><br>Mot de passe : <b>"+WORDS[S.n]+"</b>, comme "+(WORD_SENSE[WORDS[S.n]]||"");
   show("s-win");
 }
 
